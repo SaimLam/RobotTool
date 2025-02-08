@@ -1,8 +1,10 @@
 import os
 import zipfile
 
+from models.comau_program import ComauProgram
 
-class Explore:
+
+class ComauExplorer:
     def __init__(self, path) -> None:
         self.path = path
 
@@ -46,16 +48,17 @@ class Explore:
     """    def file_translate(self, file_path) -> None:
         translate = subprocess.run(["Pdl2.exe", file_path], shell=True, check=True)"""
 
-    def cod_file(self, program_name) -> str:
+    def get_program(self, program_name: str) -> ComauProgram | str:
+        # Search for the program files
         cod_file = self.file_search(f"{program_name}.pdl")
+        var_file = self.file_search(f"{program_name}.lsv")
+        # If the program files are found
         if cod_file:
-            return self.file_read(cod_file)
+            cod_string = self.file_read(cod_file)
+            if var_file:
+                var_string = self.file_read(var_file)
+                return ComauProgram(cod_string=cod_string, var_string=var_string)
+            else:
+                return ComauProgram(cod_string=cod_string)
         else:
             return f"File {program_name}.pdl not found"
-
-    def var_file(self, program_name) -> str:
-        var_file = self.file_search(f"{program_name}.lsv")
-        if var_file:
-            return self.file_read(var_file)
-        else:
-            return f"File {program_name}.lsv not found"

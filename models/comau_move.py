@@ -1,6 +1,5 @@
 # comau robot move class
 from enum import Enum, auto
-import re
 
 
 class Move_type(Enum):
@@ -40,18 +39,21 @@ class ComauMove:
             return f"  MOVE {self.move_type.name} TO {self.name}"
 
     def var_string(self) -> str:
-        match self.pos_type:
-            case Pos_type.jnt:
-                var_str = f"{self.joint_var}"
-                return f"{self.name} JNTP Arm: 1 AX: {len(self.joint_var)} Priv \n {re.sub('[{,}]', '', var_str)}"
+        var_str = ""
 
-            case Pos_type.pnt:
-                var_str = f"{self.pos_var}"
-                return f"{self.name} POS  Priv \n {re.sub('[{,}]', '', var_str)}\n CNFG: {self.cnfg}"
+        if self.pos_type == Pos_type.jnt:
+            for var in self.joint_var:
+                var_str += f" {var}"
 
-            case Pos_type.xtn:
-                var_str = f"{self.pos_var}"
-                return f"{self.name} XTND Arm: 1 Ax: {len(self.pos_var) - 6} Priv \n {re.sub('[{,}]', '', var_str)}\n CNFG: {self.cnfg}"
+            return f"{self.name} JNTP Arm: 1 AX: {len(self.joint_var)} Priv \n{var_str}"
+        else:
+            for var in self.pos_var:
+                var_str += f" {var}"
+
+            if self.pos_type == Pos_type.pnt:
+                return f"{self.name} POS  Priv \n{var_str}\n {self.cnfg}"
+            else:
+                return f"{self.name} XTND Arm: 1 Ax: {len(self.pos_var) - 6} Priv \n{var_str}\n {self.cnfg}"
 
     def rename(self, unconventional: str = "") -> None:
         if not unconventional:
@@ -105,7 +107,7 @@ class ComauMove:
                 case "CIRCULAR":
                     self.move_type = Move_type.CIRCULAR
 
-    def _extract_var(self, var_lines: list) -> None:
+    def extract_var(self, var_lines: list) -> None:
         # Check if the var_lines list is not empty
         if var_lines:
             # Extract the first and second line of the var_lines list

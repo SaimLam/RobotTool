@@ -241,4 +241,12 @@ xtn0063x XTND Arm: 1 Ax:1 Priv
 xtn0064x XTND Arm: 1 Ax:1 Priv
  X: 1397.32  Y: 276.21  Z: 469.79  A: -125.766  E: 80.497  R: 21.85  1: 80  
  CNFG: ''
-
+xtn0065x XTND Arm: 1 Ax:1 Priv
+ X: 1741.33  Y: 538.72  Z: 1660.55  A: -91.736  E: 116.413  R: 3.85  1: 70  
+ CNFG: 'W'
+xtn0066x XTND Arm: 1 Ax:1 Priv
+ X: 1585.88  Y: 194.12  Z: 837.51  A: -114.843  E: 103.012  R: 20.332  1: 70  
+ CNFG: 'W'
+xtn0067x XTND Arm: 1 Ax:1 Priv
+ X: 1397.32  Y: 276.21  Z: 469.79  A: -125.766  E: 80.497  R: 21.85  1: 80  
+ CNFG: ''

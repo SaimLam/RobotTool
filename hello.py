@@ -1,21 +1,17 @@
-from models.explore import Explore
+from models.comau_explore import ComauExplorer
 from models.comau_program import ComauProgram
 
 
 def main() -> None:
-    explorer = Explore(path="/home/sai/Documents/RoboTool/robotool")
+    explorer = ComauExplorer(path="/home/sai/Documents/RoboTool/robotool")
+    program = explorer.get_program("PW_DX_J4UPPZ1030R01")
 
-    program = ComauProgram(
-        explorer.file_read(
-            file_path="/home/sai/Documents/RoboTool/robotool/PW_DX_J4UPPZ1030R01.pdl"
-        )
-    )
+    if not isinstance(program, ComauProgram):
+        print("Error: Expected a ComauProgram object, but got something else.")
+        return
 
-    print(program.name)
-    """    for move in program.movements:
-            # print(move.var_string())
-            print(move)
-            # print("\n")"""
+    for move in program.movements:
+        print(move.var_string())
 
 
 if __name__ == "__main__":
