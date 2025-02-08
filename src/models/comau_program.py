@@ -1,6 +1,6 @@
-from models.comau_cod import ComauCod
-from models.comau_var import ComauVar
-from models.comau_move import ComauMove
+from src.models.comau_cod import ComauCod
+from src.models.comau_var import ComauVar
+from src.models.comau_move import ComauMove
 from typing import List
 
 
