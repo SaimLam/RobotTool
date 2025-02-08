@@ -1,5 +1,5 @@
-from models.comau_explore import ComauExplorer
-from models.comau_program import ComauProgram
+from src.models.comau_explore import ComauExplorer
+from src.models.comau_program import ComauProgram
 
 
 def main() -> None:
