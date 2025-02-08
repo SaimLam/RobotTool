@@ -1,0 +1,244 @@
+-- C4G
+-- File       : PW_DX_J4UPPZ1030R01    27/04/2024 11:02:04 by SimoneFiorino
+-- STUDY      : Cell01_REAR_DOOR_LH_RH
+-- ROBOT      : 030R01
+-- CONTROLLER : ComauPdl
+--
+--$$  ARM: 1 AXES: 8 AUX: 1 MASK: 191
+
+
+
+
+
+xtn0001x XTND Arm: 1 Ax:1 Priv
+ X: 1093.44  Y: 636.79  Z: 345.13  A: -135.587  E: 56.126  R: 38.154  1: 90  
+ CNFG: ''
+xtn0002x XTND Arm: 1 Ax:1 Priv
+ X: 1101.88  Y: 1078.17  Z: 787.06  A: -130.154  E: 77.186  R: 70.124  1: 100  
+ CNFG: ''
+xtn0003x XTND Arm: 1 Ax:1 Priv
+ X: 1334.8  Y: 1014.09  Z: 849.5  A: -145.459  E: 78.352  R: 73.385  1: 100  
+ CNFG: ''
+xtn0004x XTND Arm: 1 Ax:1 Priv
+ X: 1471.21  Y: 952.7  Z: 839.73  A: -160.8  E: 80.107  R: 77.203  1: 100  
+ CNFG: ''
+xtn0005x XTND Arm: 1 Ax:1 Priv
+ X: 1579.01  Y: 853.04  Z: 812.46  A: -164.816  E: 79.024  R: 77.153  1: 75  
+ CNFG: ''
+xtn0006x XTND Arm: 1 Ax:1 Priv
+ X: 1604.89  Y: 827.19  Z: 805.42  A: -165.829  E: 78.749  R: 77.155  1: 50  
+ CNFG: ''
+WP_J4U_90084 XTND Arm: 1 Ax:1 Priv
+ X: 1576.37  Y: 819.99  Z: 811.28  A: -165.829  E: 78.749  R: 77.155  1: 25  
+ CNFG: ''
+xtn0007x XTND Arm: 1 Ax:1 Priv
+ X: 1604.89  Y: 827.19  Z: 805.42  A: -165.829  E: 78.749  R: 77.155  1: 50  
+ CNFG: ''
+xtn0008x XTND Arm: 1 Ax:1 Priv
+ X: 1579.01  Y: 853.04  Z: 812.46  A: -164.816  E: 79.024  R: 77.153  1: 75  
+ CNFG: ''
+xtn0009x XTND Arm: 1 Ax:1 Priv
+ X: 1471.21  Y: 952.7  Z: 839.73  A: -160.8  E: 80.107  R: 77.203  1: 100  
+ CNFG: ''
+xtn0010x XTND Arm: 1 Ax:1 Priv
+ X: 1334.8  Y: 1014.09  Z: 849.5  A: -145.459  E: 78.352  R: 73.385  1: 100  
+ CNFG: ''
+xtn0011x XTND Arm: 1 Ax:1 Priv
+ X: 1101.88  Y: 1078.17  Z: 787.06  A: -130.154  E: 77.186  R: 70.124  1: 100  
+ CNFG: ''
+xtn0012x XTND Arm: 1 Ax:1 Priv
+ X: 1275.59  Y: 577.63  Z: 644.25  A: -128.181  E: 76.703  R: 53.371  1: 90  
+ CNFG: ''
+xtn0013x XTND Arm: 1 Ax:1 Priv
+ X: 1397.32  Y: 276.21  Z: 469.79  A: -125.766  E: 80.497  R: 21.85  1: 80  
+ CNFG: ''
+xtn0014x XTND Arm: 1 Ax:1 Priv
+ X: 1585.88  Y: 194.12  Z: 837.51  A: -114.843  E: 103.012  R: 20.332  1: 70  
+ CNFG: 'W'
+xtn0015x XTND Arm: 1 Ax:1 Priv
+ X: 2281.21  Y: 566.9  Z: 910.68  A: -95.315  E: 104.946  R: 23.721  1: 60  
+ CNFG: 'W'
+xtn0016x XTND Arm: 1 Ax:1 Priv
+ X: 2233.3  Y: 789.51  Z: 890.69  A: -91.646  E: 105.842  R: 24.562  1: 50  
+ CNFG: 'W'
+xtn0017x XTND Arm: 1 Ax:1 Priv
+ X: 2241.75  Y: 794.24  Z: 873.19  A: -91.646  E: 105.842  R: 24.562  1: 50  
+ CNFG: 'W'
+WP_J4U_90144 XTND Arm: 1 Ax:1 Priv
+ X: 2240.92  Y: 765.38  Z: 865  A: -91.646  E: 105.842  R: 24.563  1: 25  
+ CNFG: 'W'
+xtn0018x XTND Arm: 1 Ax:1 Priv
+ X: 2241.75  Y: 794.24  Z: 873.19  A: -91.646  E: 105.842  R: 24.562  1: 50  
+ CNFG: 'W'
+xtn0019x XTND Arm: 1 Ax:1 Priv
+ X: 2233.3  Y: 789.51  Z: 890.69  A: -91.646  E: 105.842  R: 24.562  1: 50  
+ CNFG: 'W'
+xtn0020x XTND Arm: 1 Ax:1 Priv
+ X: 2281.21  Y: 566.9  Z: 910.68  A: -95.315  E: 104.946  R: 23.721  1: 50  
+ CNFG: 'W'
+xtn0021x XTND Arm: 1 Ax:1 Priv
+ X: 1851.26  Y: 434.9  Z: 983.46  A: -95.315  E: 104.946  R: 23.721  1: 50  
+ CNFG: 'W'
+xtn0022x XTND Arm: 1 Ax:1 Priv
+ X: 1798.6  Y: 547.63  Z: 823.39  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+xtn0023x XTND Arm: 1 Ax:1 Priv
+ X: 1805.51  Y: 800.54  Z: 884.86  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+xtn0024x XTND Arm: 1 Ax:1 Priv
+ X: 1786.71  Y: 807.82  Z: 859.02  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+WP_J4U_90136 XTND Arm: 1 Ax:1 Priv
+ X: 1786.32  Y: 778.94  Z: 850.89  A: -90.795  E: 105.729  R: 19.789  1: 25  
+ CNFG: 'W'
+xtn0025x XTND Arm: 1 Ax:1 Priv
+ X: 1786.71  Y: 807.82  Z: 859.02  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+xtn0026x XTND Arm: 1 Ax:1 Priv
+ X: 1805.51  Y: 800.54  Z: 884.86  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+xtn0027x XTND Arm: 1 Ax:1 Priv
+ X: 1798.6  Y: 547.63  Z: 823.39  A: -90.795  E: 105.729  R: 19.789  1: 50  
+ CNFG: 'W'
+xtn0028x XTND Arm: 1 Ax:1 Priv
+ X: 1477.25  Y: 390.12  Z: 779.43  A: -89.306  E: 101.988  R: 91.915  1: 50  
+ CNFG: 'W'
+xtn0029x XTND Arm: 1 Ax:1 Priv
+ X: 1471.93  Y: 830.28  Z: 872.9  A: -89.306  E: 101.988  R: 91.915  1: 50  
+ CNFG: 'W'
+xtn0030x XTND Arm: 1 Ax:1 Priv
+ X: 1550.52  Y: 811.76  Z: 898.64  A: -91.106  E: 102.526  R: 100.123  1: 50  
+ CNFG: 'W'
+WP_J4U_90082 XTND Arm: 1 Ax:1 Priv
+ X: 1550.46  Y: 792.67  Z: 892.64  A: -90.186  E: 107.447  R: 100.361  1: 25  
+ CNFG: 'W'
+xtn0031x XTND Arm: 1 Ax:1 Priv
+ X: 1550.52  Y: 811.76  Z: 898.64  A: -91.106  E: 102.526  R: 100.123  1: 50  
+ CNFG: 'W'
+xtn0032x XTND Arm: 1 Ax:1 Priv
+ X: 1629.05  Y: 797.93  Z: 890.34  A: -91.111  E: 106.342  R: 104.116  1: 60  
+ CNFG: 'W'
+xtn0033x XTND Arm: 1 Ax:1 Priv
+ X: 1650.63  Y: 791.27  Z: 888.34  A: -91.305  E: 107.291  R: 105.033  1: 50  
+ CNFG: 'W'
+WP_J4U_90132 XTND Arm: 1 Ax:1 Priv
+ X: 1650.2  Y: 772.17  Z: 882.39  A: -91.305  E: 107.291  R: 105.033  1: 25  
+ CNFG: 'W'
+xtn0034x XTND Arm: 1 Ax:1 Priv
+ X: 1650.63  Y: 791.27  Z: 888.34  A: -91.305  E: 107.291  R: 105.033  1: 50  
+ CNFG: 'W'
+xtn0035x XTND Arm: 1 Ax:1 Priv
+ X: 1629.05  Y: 797.93  Z: 890.34  A: -91.111  E: 106.342  R: 104.116  1: 60  
+ CNFG: 'W'
+xtn0036x XTND Arm: 1 Ax:1 Priv
+ X: 1550.52  Y: 811.76  Z: 898.64  A: -91.106  E: 102.526  R: 100.123  1: 50  
+ CNFG: 'W'
+xtn0037x XTND Arm: 1 Ax:1 Priv
+ X: 1471.93  Y: 830.28  Z: 872.9  A: -89.306  E: 101.988  R: 91.915  1: 50  
+ CNFG: 'W'
+xtn0038x XTND Arm: 1 Ax:1 Priv
+ X: 1223.46  Y: 943.37  Z: 903.2  A: -83.182  E: 101.887  R: 93.498  1: 50  
+ CNFG: 'W'
+xtn0039x XTND Arm: 1 Ax:1 Priv
+ X: 1282.9  Y: 850.94  Z: 1260.11  A: -80.165  E: 119.316  R: 92.857  1: 50  
+ CNFG: 'W'
+xtn0040x XTND Arm: 1 Ax:1 Priv
+ X: 1566.13  Y: 686.07  Z: 1215.74  A: -89.055  E: 119.51  R: 90.492  1: 50  
+ CNFG: 'W'
+xtn0041x XTND Arm: 1 Ax:1 Priv
+ X: 1611.15  Y: 686.63  Z: 1216.09  A: -89.055  E: 119.51  R: 90.492  1: 50  
+ CNFG: 'W'
+WP_J4U_90076 XTND Arm: 1 Ax:1 Priv
+ X: 1611.59  Y: 660.52  Z: 1201.31  A: -89.055  E: 119.51  R: 90.492  1: 25  
+ CNFG: 'W'
+xtn0042x XTND Arm: 1 Ax:1 Priv
+ X: 1611.15  Y: 686.63  Z: 1216.09  A: -89.055  E: 119.51  R: 90.492  1: 50  
+ CNFG: 'W'
+xtn0043x XTND Arm: 1 Ax:1 Priv
+ X: 1566.13  Y: 686.07  Z: 1215.74  A: -89.055  E: 119.51  R: 90.492  1: 50  
+ CNFG: 'W'
+xtn0044x XTND Arm: 1 Ax:1 Priv
+ X: 1589.72  Y: 732.49  Z: 1104.78  A: -88.935  E: 115.034  R: 80.546  1: 50  
+ CNFG: 'W'
+WP_J4U_90078 XTND Arm: 1 Ax:1 Priv
+ X: 1590.06  Y: 714.37  Z: 1096.32  A: -88.935  E: 115.034  R: 80.546  1: 25  
+ CNFG: 'W'
+xtn0045x XTND Arm: 1 Ax:1 Priv
+ X: 1589.72  Y: 732.49  Z: 1104.78  A: -88.935  E: 115.034  R: 80.546  1: 50  
+ CNFG: 'W'
+xtn0046x XTND Arm: 1 Ax:1 Priv
+ X: 1570.17  Y: 775.34  Z: 1004.1  A: -89.271  E: 111.499  R: 55.49  1: 50  
+ CNFG: 'W'
+WP_J4U_90080 XTND Arm: 1 Ax:1 Priv
+ X: 1570.41  Y: 756.73  Z: 996.76  A: -89.271  E: 111.499  R: 55.49  1: 25  
+ CNFG: 'W'
+xtn0047x XTND Arm: 1 Ax:1 Priv
+ X: 1570.17  Y: 775.34  Z: 1004.1  A: -89.271  E: 111.499  R: 55.49  1: 50  
+ CNFG: 'W'
+xtn0048x XTND Arm: 1 Ax:1 Priv
+ X: 1618.78  Y: 768.69  Z: 1026.47  A: -89.662  E: 110.836  R: 55.343  1: 70  
+ CNFG: 'W'
+xtn0049x XTND Arm: 1 Ax:1 Priv
+ X: 1661.2  Y: 758.91  Z: 984.35  A: -90.025  E: 110.248  R: 55.215  1: 50  
+ CNFG: 'W'
+WP_J4U_90130 XTND Arm: 1 Ax:1 Priv
+ X: 1661.2  Y: 740.14  Z: 977.42  A: -90.025  E: 110.248  R: 55.215  1: 25  
+ CNFG: 'W'
+xtn0050x XTND Arm: 1 Ax:1 Priv
+ X: 1661.2  Y: 758.91  Z: 984.35  A: -90.025  E: 110.248  R: 55.215  1: 50  
+ CNFG: 'W'
+xtn0051x XTND Arm: 1 Ax:1 Priv
+ X: 1672.22  Y: 720.3  Z: 1077.95  A: -90.715  E: 113.88  R: 79.838  1: 50  
+ CNFG: 'W'
+WP_J4U_90128 XTND Arm: 1 Ax:1 Priv
+ X: 1671.99  Y: 702.01  Z: 1069.85  A: -90.715  E: 113.88  R: 79.838  1: 25  
+ CNFG: 'W'
+xtn0052x XTND Arm: 1 Ax:1 Priv
+ X: 1672.22  Y: 720.3  Z: 1077.95  A: -90.715  E: 113.88  R: 79.838  1: 50  
+ CNFG: 'W'
+xtn0053x XTND Arm: 1 Ax:1 Priv
+ X: 1688.8  Y: 679.86  Z: 1159.06  A: -91.238  E: 112.99  R: 99.479  1: 50  
+ CNFG: 'W'
+WP_J4U_90126 XTND Arm: 1 Ax:1 Priv
+ X: 1686.98  Y: 658.36  Z: 1158.77  A: -90.308  E: 117.919  R: 99.879  1: 25  
+ CNFG: 'W'
+xtn0054x XTND Arm: 1 Ax:1 Priv
+ X: 1688.8  Y: 679.86  Z: 1159.06  A: -91.238  E: 112.99  R: 99.479  1: 50  
+ CNFG: 'W'
+xtn0055x XTND Arm: 1 Ax:1 Priv
+ X: 1655.34  Y: 699.02  Z: 1139.96  A: -90.386  E: 113.681  R: 93.007  1: 60  
+ CNFG: 'W'
+xtn0056x XTND Arm: 1 Ax:1 Priv
+ X: 1589.72  Y: 732.49  Z: 1104.78  A: -88.935  E: 115.034  R: 80.546  1: 60  
+ CNFG: 'W'
+xtn0057x XTND Arm: 1 Ax:1 Priv
+ X: 1566.13  Y: 686.07  Z: 1215.74  A: -89.055  E: 119.51  R: 90.492  1: 60  
+ CNFG: 'W'
+xtn0058x XTND Arm: 1 Ax:1 Priv
+ X: 1486.58  Y: 626.87  Z: 1566.18  A: -91.071  E: 116.546  R: 46.631  1: 60  
+ CNFG: 'W'
+xtn0059x XTND Arm: 1 Ax:1 Priv
+ X: 1741.33  Y: 538.72  Z: 1660.55  A: -91.736  E: 116.413  R: 3.85  1: 70  
+ CNFG: 'W'
+xtn0060x XTND Arm: 1 Ax:1 Priv
+ X: 1763.11  Y: 663.55  Z: 1231.02  A: -90.454  E: 120.098  R: -10.226  1: 70  
+ CNFG: 'W'
+WP_J4U_90124 XTND Arm: 1 Ax:1 Priv
+ X: 1762.83  Y: 628.93  Z: 1210.96  A: -90.454  E: 120.098  R: -10.226  1: 25  
+ CNFG: 'W'
+WP_J4U_90122 XTND Arm: 1 Ax:1 Priv
+ X: 1863.66  Y: 627.73  Z: 1211.28  A: -90.612  E: 120.338  R: -0.304  1: 25  
+ CNFG: 'W'
+xtn0061x XTND Arm: 1 Ax:1 Priv
+ X: 1864.02  Y: 662.25  Z: 1231.49  A: -90.612  E: 120.338  R: -0.304  1: 70  
+ CNFG: 'W'
+xtn0062x XTND Arm: 1 Ax:1 Priv
+ X: 1741.33  Y: 538.72  Z: 1660.55  A: -91.736  E: 116.413  R: 3.85  1: 70  
+ CNFG: 'W'
+xtn0063x XTND Arm: 1 Ax:1 Priv
+ X: 1585.88  Y: 194.12  Z: 837.51  A: -114.843  E: 103.012  R: 20.332  1: 70  
+ CNFG: 'W'
+xtn0064x XTND Arm: 1 Ax:1 Priv
+ X: 1397.32  Y: 276.21  Z: 469.79  A: -125.766  E: 80.497  R: 21.85  1: 80  
+ CNFG: ''
+

@@ -1,0 +1,202 @@
+PROGRAM P01PPZ1030R01 EZ, PROG_ARM = 1, STACK = 2048
+--# eM-Workplace to COMAU PDL C4G download
+--# ---------------------------------------------
+--# CREATED    : 27-04-2024 10:58:58 by SimoneFiorino
+--# STUDY      : Cell01_REAR_DOOR_LH_RH
+--# ROBOT      : 030R01
+--# CONTROLLER : ComauPdl
+VAR
+
+VAR vb_back_home : BOOLEAN 
+
+CONST
+  I352_start_prog = 352
+  FI1_Prog_Selection = 1
+  FI8_Table_Position = 8
+  FO1_Echo_Prog_Selection = 1
+  I361_back_home_req = 361
+  I362_service_done = 362
+  I363_Ack_end_job = 363
+  I414_dry_run = 414
+  I280_tipchange_done = 280
+  O353_prog_end = 353
+  O354_prog_running = 354
+  O360_soft_stop = 360
+  O361_back_home_possible = 361
+  O362_service_pos_reached = 362
+  O284_tip_dress_running = 284
+  O289_part1_on_board = 289
+  O290_part2_on_board = 290
+  O278_tip_change_warning_gun1 = 278
+  O279_tip_change_alarm_gun1 = 279
+  I368_proceed_to_JOB_1 = 368
+  O368_Out_of_JOB_1 = 368
+  I369_proceed_to_JOB_2 = 369
+  O369_Out_of_JOB_2 = 369
+  I370_proceed_to_JOB_3 = 370
+  O370_Out_of_JOB_3 = 370
+  I371_proceed_to_JOB_4 = 371
+  O371_Out_of_JOB_4 = 371
+  I372_proceed_to_JOB_5 = 372
+  O372_Out_of_JOB_5 = 372
+  I373_proceed_to_JOB_6 = 373
+  O373_Out_of_JOB_6 = 373
+  I374_proceed_to_JOB_7 = 374
+  O374_Out_of_JOB_7 = 374
+  I375_proceed_to_JOB_8 = 375
+  O375_Out_of_JOB_8 = 375
+  I376_proceed_to_JOB_9 = 376
+  O376_Out_of_JOB_9 = 376
+  I377_proceed_to_JOB_10 = 377
+  O377_Out_of_JOB_10 = 377
+  I378_proceed_to_JOB_11 = 378
+  O378_Out_of_JOB_11 = 378
+  I379_proceed_to_JOB_12 = 379
+  O379_Out_of_JOB_12 = 379
+  --------- End Job ----------
+  I380_Ack_end_JOB_1 = 380
+  O380_end_JOB_1 = 380
+  I381_Ack_end_JOB_2 = 381
+  O381_end_JOB_2 = 381
+  I382_Ack_end_JOB_3 = 382
+  O382_end_JOB_3 = 382
+  I383_Ack_end_JOB_4 = 383
+  O383_end_JOB_4 = 383
+  I384_Ack_end_JOB_5 = 384
+  O384_end_JOB_5 = 384
+  I385_Ack_end_JOB_6 = 385
+  O385_end_JOB_6 = 385
+  I386_Ack_end_JOB_7 = 386
+  O386_end_JOB_7 = 386
+  I387_Ack_end_JOB_8 = 387
+  O387_end_JOB_8 = 387
+  I388_Ack_end_JOB_9 = 388
+  O388_end_JOB_9 = 388
+  I389_Ack_end_JOB_10 = 389
+  O389_end_JOB_10 = 389
+  I390_Ack_end_JOB_11 = 390
+  O390_end_JOB_11 = 390
+  I391_Ack_end_JOB_12 = 391
+  O391_end_JOB_12 = 391
+  ------ Tool request --------
+  I392_request_OK_1 = 392
+  O392_request_1 = 392
+  I393_request_OK_2 = 393
+  O393_request_2 = 393
+  I394_request_OK_3 = 394
+  O394_request_3 = 394
+  I395_request_OK_4 = 395
+  O395_request_4 = 395
+  I396_request_OK_5 = 396
+  O396_request_5 = 396
+  I397_request_OK_6 = 397
+  O397_request_6 = 397
+  I398_request_OK_7 = 398
+  O398_request_7 = 398
+  I399_request_OK_8 = 399
+  O399_request_8 = 399
+  ------------------- Init Routines ------------------------------
+ROUTINE arc_job(ai_njob : INTEGER) EXPORTED FROM wa_appl
+ROUTINE init_motion EXPORTED FROM LROBOT
+ROUTINE hand_init EXPORTED FROM LROBOT
+ROUTINE init_gun EXPORTED FROM LROBOT
+ROUTINE init_io EXPORTED FROM LROBOT
+ROUTINE check_HOME EXPORTED FROM LROBOT
+ROUTINE fault(ai_alarm_number : INTEGER; as_mod_name : STRING) EXPORTED FROM LROBOT
+ROUTINE TC_Report_Write EXPORTED FROM TC_Report
+ROUTINE TC_Log_Write EXPORTED FROM TC_Report
+  -------------------- Tool / Frame ------------------------------
+ROUTINE rtf(ai_t_idx, ai_f_num : INTEGER) : INTEGER EXPORTED FROM TT_TOOL
+ROUTINE tf(ai_tool_idx, ai_frame_idx : INTEGER) : INTEGER EXPORTED FROM TT_TOOL
+  -------------------- Back HOME option --------------------------
+ROUTINE back_HOME_opt(ai_inp1 : INTEGER; ai_inp2, ai_inp3, ai_inp4 : INTEGER()) : INTEGER EXPORTED FROM LROBOT
+  ----------------- Wait & Send Signals --------------------------
+ROUTINE D_send(inp : INTEGER; state : BOOLEAN) EXPORTED FROM LROBOT
+ROUTINE D_wait(inp : INTEGER; state : BOOLEAN) EXPORTED FROM LROBOT
+ROUTINE Wait_Job(ai_inp1, ai_inp2 : INTEGER; ai_inp3, ai_inp4, ai_inp5, ai_inp6, ai_inp7, ai_inp8, ai_inp9 : INTEGER()) : INTEGER EXPORTED FROM LROBOT
+ROUTINE set_fly(ai_sign_idx : INTEGER; ab_state : BOOLEAN) : INTEGER EXPORTED FROM LROBOT
+  ----------------- Robot collision zone --------------------------
+ROUTINE engage_zone(ai_zone : INTEGER; robotID : STRING) EXPORTED FROM LROBOT
+ROUTINE release_zone(ai_zone : INTEGER; robotID : STRING) EXPORTED FROM LROBOT
+ROUTINE rel_zone_fly(ai_zone : INTEGER; robotID : STRING) : INTEGER EXPORTED FROM LROBOT
+  ------------------ Collision detection --------------------------
+ROUTINE collision_start(ai_coll, ai_tempo : INTEGER) EXPORTED FROM collision
+ROUTINE collision_end EXPORTED FROM collision
+  ----------------------- Soft stop -------------------------------
+ROUTINE enable_soft_stop EXPORTED FROM LROBOT
+ROUTINE disable_soft_stop EXPORTED FROM LROBOT
+  ------------------------ Gripper --------------------------------
+ROUTINE grip_air_supervision(ai_grip : INTEGER; ab_enable : BOOLEAN) EXPORTED FROM hn_hand
+ROUTINE gripper_vacuum(ai_grip, ai_vac : INTEGER; ab_state, ab_check : BOOLEAN) EXPORTED FROM hn_hand
+ROUTINE gripper_sequence(ai_grip, ai_seq : INTEGER; ab_state, ab_check : BOOLEAN) EXPORTED FROM hn_hand
+ROUTINE gripper_chkpart(ai_grip, ai_part : INTEGER; ab_state : BOOLEAN) EXPORTED FROM hn_hand
+ROUTINE grip_part_supervision(ai_grip, ai_part : INTEGER; ab_state : BOOLEAN) EXPORTED FROM hn_hand
+ROUTINE dressReq(ai_gun : INTEGER; ai_wpack : INTEGER()) : BOOLEAN EXPORTED FROM SwH_Tip
+ROUTINE TipChgReq(ai_gun : INTEGER; ai_wpack : INTEGER()) : BOOLEAN EXPORTED FROM SwH_Tip
+ROUTINE sel_variant_family(ai_wpack, ai_variant, ai_family : INTEGER) EXPORTED FROM D_Timer
+ROUTINE spot_init(ai_tmr, ai_gun : INTEGER) EXPORTED FROM sb_appl
+ROUTINE herb_gun_cal(ai_egun : INTEGER) : BOOLEAN EXPORTED FROM h_egun
+ROUTINE tip_close(ai_egun, ai_force : INTEGER; ar_mm : REAL; ai_time : INTEGER) EXPORTED FROM h_egun
+ROUTINE update_tool(ai_tool_idx, ai_egun : INTEGER) EXPORTED FROM h_egun
+ROUTINE set_tip_status(ai_wpack, ai_tip_index, ai_action : INTEGER; ab_check : BOOLEAN) EXPORTED FROM D_Timer
+ROUTINE TipChanging(ab_state : BOOLEAN; ai_mediapanel : INTEGER()) : BOOLEAN EXPORTED FROM SwH_Tip
+ROUTINE tip_distance(ai_egun : INTEGER; ar_mm : REAL; ai_term_type : INTEGER) EXPORTED FROM h_egun
+ROUTINE tip_changed(ai_egun : INTEGER) EXPORTED FROM h_egun
+ROUTINE tip_change(ai_wpack, ai_gun : INTEGER; ab_first_dress : BOOLEAN) EXPORTED FROM lrobot
+ROUTINE new_tip(ai_gun : INTEGER) : BOOLEAN EXPORTED FROM lrobot
+ROUTINE spot(ai_wpack, ai_wprog, ai_gun : INTEGER; ab_before : BOOLEAN) : INTEGER EXPORTED FROM sb_appl
+  -- Routine Dress
+ROUTINE dress(ai_wpack, ai_dress, ai_gun, ai_wprog, ai_time_turn : INTEGER) EXPORTED FROM h_dress
+ROUTINE egun_sel(ai_egun : INTEGER) EXPORTED FROM h_egun
+ROUTINE setevp(ai_wpack, ai_wprog : INTEGER) EXPORTED FROM sb_appl
+ROUTINE tip_cal(ai_egun : INTEGER) EXPORTED FROM h_egun
+ROUTINE new_tip_cal(ai_egun : INTEGER) EXPORTED FROM h_egun
+ROUTINE TipReqChange(ai_wpack, ai_gun : INTEGER) : BOOLEAN EXPORTED FROM h_tipchange
+ROUTINE get_tip_status(ai_wpack, ai_tip_index : INTEGER) : INTEGER EXPORTED FROM D_Timer
+ROUTINE glue_init(tool_id : INTEGER) EXPORTED FROM gl_glue
+ROUTINE glue_end EXPORTED FROM gl_glue
+ROUTINE glue_closegun : INTEGER EXPORTED FROM gl_glue
+ROUTINE glue_prepara(bead_type : INTEGER) EXPORTED FROM gl_glue
+
+ROUTINE glue_opengun : INTEGER EXPORTED FROM gl_glue
+ROUTINE glue_purge(tool_idx : INTEGER) EXPORTED FROM gl_glue
+ROUTINE glue_fill(tool_idx : INTEGER; ab_wait_check : BOOLEAN) EXPORTED FROM gl_glue
+ROUTINE glue_fill_wait(tool_idx : INTEGER) EXPORTED FROM gl_glue
+BEGIN
+   ----------------------------------------
+   -- Programma di lavoro modello J4U - SX --
+   ----------------------------------------
+
+   MOVE JOINT TO $HOME 
+
+   D_send(O354_prog_running, ON)
+
+   --Saldatura SX
+   CALL PW_SX_J4UPPZ1030R01
+
+   IF vb_back_home = TRUE THEN
+   MOVE TO $HOME
+   RETURN
+   ENDIF
+
+   --Fine Lavoro
+   D_send(O353_prog_end, ON)
+   D_wait(I363_Ack_end_job, ON)
+   DELAY 500
+
+   -- Check Tip Dress Request
+   IF dressReq(1) OR $IN[I414_dry_run] THEN
+   CALL PWDRESS
+   ENDIF
+
+   -- Check Tip Change Request
+   IF TipChgReq(1) THEN
+   CALL PWDRESS
+   CALL PWTIPCH
+   CALL PWDRESS
+   ENDIF
+
+   MOVE JOINT TO $HOME 
+
+END P01PPZ1030R01
+
