@@ -50,13 +50,13 @@ class ComauExplorer:
 
     def get_program(self, program_name: str) -> ComauProgram | str:
         # Search for the program files
-        cod_file = self.file_search(f"{program_name}.pdl")
-        var_file = self.file_search(f"{program_name}.lsv")
+        cod_file_path = self.file_search(f"{program_name}.pdl")
+        var_file_path = self.file_search(f"{program_name}.lsv")
         # If the program files are found
-        if cod_file:
-            cod_string = self.file_read(cod_file)
-            if var_file:
-                var_string = self.file_read(var_file)
+        if cod_file_path:
+            cod_string = self.file_read(cod_file_path)
+            if var_file_path:
+                var_string = self.file_read(var_file_path)
                 return ComauProgram(cod_string=cod_string, var_string=var_string)
             else:
                 return ComauProgram(cod_string=cod_string)

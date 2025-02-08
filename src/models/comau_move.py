@@ -1,5 +1,6 @@
 # comau robot move class
 from enum import Enum, auto
+from dataclasses import dataclass
 
 
 class Move_type(Enum):
@@ -13,20 +14,18 @@ class Pos_type(Enum):
     pnt = auto()
     xtn = auto()
 
-
+@dataclass 
 class ComauMove:
-    def __init__(self, cod_lines: list) -> None:
-        self.fly = False
-        self.conditioned = False
-        self.condition = []
-        self.move_type = Move_type.JOINT
-        self.pos_type = Pos_type.jnt
-        self.name = ""
-        self.name_index = 0
-        self.joint_var = []
-        self.pos_var = []
-        self.cnfg = ""
-        self._extract_cod(cod_lines)
+    fly = False
+    conditioned = False
+    condition = []
+    move_type = Move_type.JOINT
+    pos_type = Pos_type.pnt
+    name = ""
+    name_index = 0
+    joint_var = []
+    pos_var = []
+    cnfg = ""
 
     def __repr__(self) -> str:
         if self.fly:
@@ -67,7 +66,7 @@ class ComauMove:
         else:
             self.name = unconventional
 
-    def _extract_cod(self, cod_lines: list) -> None:
+    def extract_cod(self, cod_lines: list) -> None:
         # Check if the cod_lines list is not empty
         if cod_lines:
             # Extract the first line of the cod_lines list
