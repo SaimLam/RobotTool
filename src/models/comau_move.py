@@ -14,7 +14,8 @@ class Pos_type(Enum):
     pnt = auto()
     xtn = auto()
 
-@dataclass 
+
+@dataclass
 class ComauMove:
     fly = False
     conditioned = False
@@ -30,11 +31,11 @@ class ComauMove:
     def __repr__(self) -> str:
         if self.fly:
             if self.conditioned:
-                return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE, \n    {',\n   '.join(self.condition)} \n  ENDMOVE"
+                return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
             return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE"
         else:
             if self.conditioned:
-                return f"  MOVE {self.move_type.name} TO {self.name}, \n    {',\n   '.join(self.condition)} \n  ENDMOVE"
+                return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
             return f"  MOVE {self.move_type.name} TO {self.name}"
 
     def var_string(self) -> str:
@@ -88,6 +89,7 @@ class ComauMove:
                 self._extract_move_type_from_string(cod_elements[1])
 
     def _extract_condition(self, condition_cod_lines: list) -> None:
+        self.condition = []
         # Check if the condition_cod_lines list is not empty
         if condition_cod_lines:
             for condition_cod_line in condition_cod_lines:
