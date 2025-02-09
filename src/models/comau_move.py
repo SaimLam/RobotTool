@@ -1,6 +1,6 @@
 # comau robot move class
+from dataclasses import dataclass, field
 from enum import Enum, auto
-from dataclasses import dataclass
 
 
 class Move_type(Enum):
@@ -15,78 +15,87 @@ class Pos_type(Enum):
     xtn = auto()
 
 
-@dataclass
+@dataclass(slots=True)
 class ComauMove:
-    fly = False
-    conditioned = False
-    condition = []
-    move_type = Move_type.JOINT
-    pos_type = Pos_type.pnt
-    name = ""
-    name_index = 0
-    joint_var = []
-    pos_var = []
-    cnfg = ""
+    name: str = ""
+    fly: bool = False
+    move_type: Move_type = Move_type.JOINT
+    pos_type: Pos_type = Pos_type.pnt
+    condition: list[str] = field(default_factory=list)
+    coordinates: dict = field(default_factory=dict)
+    cnfg: str = ""
 
+    # cod represantation
     def __repr__(self) -> str:
         if self.fly:
-            if self.conditioned:
+            if self.condition:
                 return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
             return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE"
         else:
-            if self.conditioned:
+            if self.condition:
                 return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
             return f"  MOVE {self.move_type.name} TO {self.name}"
 
+    # var represantation
     def var_string(self) -> str:
-        var_str = ""
+        coord_str = self.coordinates_string()
 
-        if self.pos_type == Pos_type.jnt:
-            for var in self.joint_var:
-                var_str += f" {var}"
+        match self.pos_type:
+            case Pos_type.jnt:
+                return f"{self.name} JNTP Arm: 1 AX: {len(self.coordinates)} Priv \n{coord_str}"
+            case Pos_type.pnt:
+                return f"{self.name} POS  Priv \n{coord_str}\n {self.cnfg}"
+            case Pos_type.xtn:
+                return f"{self.name} XTND Arm: 1 Ax: {len(self.coordinates) - 6} Priv \n{coord_str}\n {self.cnfg}"
 
-            return f"{self.name} JNTP Arm: 1 AX: {len(self.joint_var)} Priv \n{var_str}"
-        else:
-            for var in self.pos_var:
-                var_str += f" {var}"
+    # coodinates represantation
+    def coordinates_string(self) -> str:
+        if not self.coordinates:
+            return f"{self.name} POS  has no coordinate data"
+        coord_str = ""
+        for key, var in self.coordinates.items():
+            coord_str += f" {key}: {var}"
+        return coord_str
 
-            if self.pos_type == Pos_type.pnt:
-                return f"{self.name} POS  Priv \n{var_str}\n {self.cnfg}"
-            else:
-                return f"{self.name} XTND Arm: 1 Ax: {len(self.pos_var) - 6} Priv \n{var_str}\n {self.cnfg}"
-
-    def rename(self, unconventional: str = "") -> None:
+    def rename(self, name_index: int, unconventional: str = "") -> None:
         if not unconventional:
             match self.pos_type:
                 case Pos_type.jnt:
-                    self.name = f"jnt{self.name_index}J"
+                    self.name = f"jnt{name_index}J"
                 case Pos_type.pnt:
-                    self.name = f"pnt{self.name_index}P"
+                    self.name = f"pnt{name_index}P"
                 case Pos_type.xtn:
-                    self.name = f"xtn{self.name_index}X"
+                    self.name = f"xtn{name_index}X"
         else:
             self.name = unconventional
 
-    def extract_cod(self, cod_lines: list) -> None:
-        # Check if the cod_lines list is not empty
+    def extract_cod(self, cod_lines: list, via_point: bool = False) -> None:
         if cod_lines:
-            # Extract the first line of the cod_lines list
             first_cod_line = cod_lines[0].strip()
-            # Check if the first line of the cod_lines list is a MOVEFLY command
-            if first_cod_line.startswith("MOVEFLY"):
-                self.fly = True
-            # Check if cod_lines list are more than one line and the first line ends with a comma
-            if first_cod_line.endswith(",") and len(cod_lines) > 1:
-                self._extract_condition(cod_lines)
-            # Check if the first line of the cod_lines list contains the string '$HOME'
-            if "$HOME" in first_cod_line:
-                self.name = "$HOME"
-                self.move_type = Move_type.JOINT
-                self.pos_type = Pos_type.jnt
-            else:
-                cod_elements = first_cod_line.split()
-                self.name = cod_elements[3]
-                self._extract_move_type_from_string(cod_elements[1])
+            self._check_home(first_cod_line)
+            self._check_movefly(first_cod_line)
+            self._check_condition(cod_lines, first_cod_line)
+            self._check_name_and_move_type(first_cod_line, via_point)
+
+    def _check_movefly(self, first_cod_line: str) -> None:
+        if first_cod_line.startswith("MOVEFLY"):
+            self.fly = True
+
+    def _check_condition(self, cod_lines: list, first_cod_line: str) -> None:
+        if first_cod_line.endswith(",") and len(cod_lines) > 1:
+            self._extract_condition(cod_lines)
+
+    def _check_home(self, first_cod_line: str) -> None:
+        if "$HOME" in first_cod_line:
+            self.name = "$HOME"
+            self.move_type = Move_type.JOINT
+            self.pos_type = Pos_type.jnt
+
+    def _check_name_and_move_type(self, first_cod_line: str, via_point: bool) -> None:
+        if "$HOME" not in first_cod_line:
+            cod_elements = first_cod_line.split()
+            self.name = cod_elements[3] if not via_point else cod_elements[5]
+            self._extract_move_type(cod_elements[1])
 
     def _extract_condition(self, condition_cod_lines: list) -> None:
         self.condition = []
@@ -95,10 +104,9 @@ class ComauMove:
             for condition_cod_line in condition_cod_lines:
                 # Check if the condition_cod_line contains the string "WITH CONDITION"
                 if condition_cod_line.strip().startswith("WITH"):
-                    self.conditioned = True
                     self.condition.append(condition_cod_line.strip())
 
-    def _extract_move_type_from_string(self, cod_element: str) -> None:
+    def _extract_move_type(self, cod_element: str) -> None:
         if cod_element:
             match cod_element:
                 case "JOINT":
@@ -111,32 +119,42 @@ class ComauMove:
     def extract_var(self, var_lines: list) -> None:
         # Check if the var_lines list is not empty
         if var_lines:
-            # Extract the first and second line of the var_lines list
             first_var_line = var_lines[0].strip()
             pos_var_line = var_lines[1].strip()
-
-            # Check the first line for the presence of the strings 'XTND', 'JNTP' or 'POS'
-            if "XTND" in first_var_line:
-                self.pos_type = Pos_type.xtn
-            elif "JNTP" in first_var_line:
-                self.pos_type = Pos_type.jnt
-            else:
-                self.pos_type = Pos_type.pnt
-
-            # Check if the var_lines list is more than two lines
-            # The third line contains the position configuration
+            # extract move position type
+            self.pos_type = self._position_type(first_var_line)
+            # extract move coordinates
+            self.coordinates = self._move_coordinates(pos_var_line)
+            # Check if the var_lines list has more than two lines
             if len(var_lines) > 2:
-                self.pos_var = pos_var_line.split()
                 self.cnfg = var_lines[2].strip()
-            else:
-                self.joint_var = pos_var_line.split()
+
+    def _position_type(self, position_type_string: str) -> Pos_type:
+        # Check the line for the presence of the strings 'XTND', 'JNTP' or 'POS'
+        if "XTND" in position_type_string:
+            return Pos_type.xtn
+        elif "JNTP" in position_type_string:
+            return Pos_type.jnt
+        else:
+            return Pos_type.pnt
+
+    def _move_coordinates(self, position_var_line: str) -> dict:
+        # Split the position_var_line into a list
+        position_vars = position_var_line.split()
+        # Create a dictionary with the position variables
+        return {
+            position_vars[i].strip(":"): position_vars[i + 1]
+            for i in range(0, len(position_vars), 2)
+        }
 
 
+@dataclass(slots=True)
 class WeldSpot(ComauMove):
-    def __init__(self, cod_lines: list) -> None:
-        super().__init__(cod_lines)
-        self.spot_name = ""
-        self.spot_index = 0
+    spot_index: int = 0
 
-    def change_spot_index(self, new_index: int) -> None:
-        self.spot_index = new_index
+    def set_spot_index(self, weld_string: str) -> None:
+        index_str = weld_string.split("(")[1]
+        if "," in index_str:
+            self.spot_index = int(index_str.split(",")[0])
+        else:
+            self.spot_index = int(index_str.split(")")[0])

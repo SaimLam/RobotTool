@@ -9,9 +9,12 @@ def main() -> None:
 
     print(program.name)
     print(program.header)
-    for movement in program.movements:
-        print(movement)
-        print(movement.var_string())
+    if not program.weld_spots:
+        print("no weld spots found")
+
+    for move in program.movements:
+        print(move)
+        print(move.coordinates_string())
         print()
 
 
