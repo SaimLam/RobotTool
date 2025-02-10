@@ -96,20 +96,22 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
     lines = cod_text.split("\n")
     movements = []
     _buffer_lines = []
-
+    # text iteration
     for _current_line in lines:
         _current_line = _current_line.strip()
-
+        # find move line
         if _current_line.startswith(("MOVE", "MOVEFLY")):
             if _buffer_lines:
                 new_movement = comau_move(_buffer_lines)
                 movements.append(new_movement)
+                # check if circular in order to get the via point
                 if new_movement.move_type == Move_type.CIRCULAR:
                     via_point = comau_move(_buffer_lines, True)
                     movements.append(via_point)
                 _buffer_lines = []
+            # insert first line in move buffer
             _buffer_lines.append(_current_line)
-
+        # fill the move buffer lines
         if _current_line.startswith(("WITH", "ENDMOVE")):
             _buffer_lines.append(_current_line)
 
@@ -120,9 +122,9 @@ def comau_move(buffer_lines: list, via_point: bool = False) -> ComauMove | WeldS
     for line in buffer_lines:
         if line.strip().startswith("WITH CONDITION"):
             if "spot" in line or "weld" in line:
-                new_spot_move = WeldSpot
-                new_spot_move.extract_cod(buffer_lines, via_point)
-                new_spot_move.set_spot_index(new_spot_move, line)
+                new_spot_move = WeldSpot()
+                new_spot_move.extract_cod(buffer_lines)
+                new_spot_move.set_spot_index(line)
                 return new_spot_move
 
     new_movement = ComauMove()
