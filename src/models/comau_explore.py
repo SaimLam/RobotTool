@@ -48,19 +48,16 @@ class ComauExplorer:
     """    def file_translate(self, file_path) -> None:
         translate = subprocess.run(["Pdl2.exe", file_path], shell=True, check=True)"""
 
-    def get_program(self, program_name: str) -> ComauProgram | str:
+    def get_program(self, program_name: str) -> ComauProgram:
         # Search for the program files
         cod_file_path = self.file_search(f"{program_name}.pdl")
         var_file_path = ""
         if cod_file_path:
             var_file_path = self.file_search(f"{program_name}.lsv")
         # If the program files are found
-        if cod_file_path:
-            cod_string = self.file_read(cod_file_path)
-            if var_file_path:
-                var_string = self.file_read(var_file_path)
-                return ComauProgram(cod_string=cod_string, var_string=var_string)
-            else:
-                return ComauProgram(cod_string=cod_string)
+        cod_string = self.file_read(cod_file_path)
+        if var_file_path:
+            var_string = self.file_read(var_file_path)
+            return ComauProgram(cod=cod_string, var=var_string)
         else:
-            return f"File {program_name}.pdl not found"
+            return ComauProgram(cod=cod_string)

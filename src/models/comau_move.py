@@ -152,6 +152,9 @@ class ComauMove:
 class WeldSpot(ComauMove):
     spot_index: int = 0
 
+    def __repr__(self) -> str:
+        return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
+
     def set_spot_index(self, weld_string: str) -> None:
         index_str = weld_string.split("(")[1]
         if "," in index_str:
