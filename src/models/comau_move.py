@@ -77,68 +77,57 @@ class ComauMove:
             self._check_condition(cod_lines, first_cod_line)
             self._check_name_and_move_type(first_cod_line, via_point)
 
-    def _check_movefly(self, first_cod_line: str) -> None:
-        if first_cod_line.startswith("MOVEFLY"):
-            self.fly = True
-
-    def _check_condition(self, cod_lines: list, first_cod_line: str) -> None:
-        if first_cod_line.endswith(",") and len(cod_lines) > 1:
-            self._extract_condition(cod_lines)
-
     def _check_home(self, first_cod_line: str) -> None:
         if "$HOME" in first_cod_line:
             self.name = "$HOME"
             self.move_type = Move_type.JOINT
             self.pos_type = Pos_type.jnt
 
+    def _check_movefly(self, first_cod_line: str) -> None:
+        if first_cod_line.startswith("MOVEFLY"):
+            self.fly = True
+
+    def _check_condition(self, cod_lines: list, first_cod_line: str) -> None:
+        if first_cod_line.endswith(",") and len(cod_lines) > 1:
+            self.condition = []
+            for condition_line in cod_lines:
+                if condition_line.strip().startswith("WITH"):
+                    self.condition.append(condition_line.strip())
+
     def _check_name_and_move_type(self, first_cod_line: str, via_point: bool) -> None:
         if "$HOME" not in first_cod_line:
             cod_elements = first_cod_line.split()
             self.name = cod_elements[3] if not via_point else cod_elements[5]
-            self._extract_move_type(cod_elements[1])
+            self.move_type = self._extract_move_type(cod_elements[1])
 
-    def _extract_condition(self, condition_cod_lines: list) -> None:
-        self.condition = []
-        # Check if the condition_cod_lines list is not empty
-        if condition_cod_lines:
-            for condition_cod_line in condition_cod_lines:
-                # Check if the condition_cod_line contains the string "WITH CONDITION"
-                if condition_cod_line.strip().startswith("WITH"):
-                    self.condition.append(condition_cod_line.strip())
+    def _extract_move_type(self, cod_element: str) -> Move_type:
+        match cod_element:
+            case "LINEAR":
+                return Move_type.LINEAR
+            case "CIRCULAR":
+                return Move_type.CIRCULAR
+        return Move_type.JOINT  # Default return value
 
-    def _extract_move_type(self, cod_element: str) -> None:
-        if cod_element:
-            match cod_element:
-                case "JOINT":
-                    self.move_type = Move_type.JOINT
-                case "LINEAR":
-                    self.move_type = Move_type.LINEAR
-                case "CIRCULAR":
-                    self.move_type = Move_type.CIRCULAR
+    def _extract_position_type(self, position_type_string: str) -> Pos_type:
+        match position_type_string:
+            case "XTND":
+                return Pos_type.xtn
+            case "JNTP":
+                return Pos_type.jnt
+        return Pos_type.pnt  # Default return value
 
     def extract_var(self, var_lines: list) -> None:
         # Check if the var_lines list is not empty
-        if var_lines:
-            first_var_line = var_lines[0].strip()
-            pos_var_line = var_lines[1].strip()
+        if len(var_lines) > 1:
             # extract move position type
-            self.pos_type = self._position_type(first_var_line)
+            self.pos_type = self._extract_position_type(var_lines[0].strip())
             # extract move coordinates
-            self.coordinates = self._move_coordinates(pos_var_line)
-            # Check if the var_lines list has more than two lines
+            self.coordinates = self._extract_move_coordinates(var_lines[1].strip())
+            # Check if config var line present
             if len(var_lines) > 2:
                 self.cnfg = var_lines[2].strip()
 
-    def _position_type(self, position_type_string: str) -> Pos_type:
-        # Check the line for the presence of the strings 'XTND', 'JNTP' or 'POS'
-        if "XTND" in position_type_string:
-            return Pos_type.xtn
-        elif "JNTP" in position_type_string:
-            return Pos_type.jnt
-        else:
-            return Pos_type.pnt
-
-    def _move_coordinates(self, position_var_line: str) -> dict:
+    def _extract_move_coordinates(self, position_var_line: str) -> dict:
         # Split the position_var_line into a list
         position_vars = position_var_line.split()
         # Create a dictionary with the position variables
