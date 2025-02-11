@@ -1,5 +1,4 @@
 from typing import List
-
 from src.models.comau_move import ComauMove, Move_type, WeldSpot
 
 # This file contains the functions to parse a Comau code file. The code file is divided into a header, declarations, and body.
@@ -7,7 +6,7 @@ from src.models.comau_move import ComauMove, Move_type, WeldSpot
 # The functions in this file extract the header, declarations, constants, routines, and variables from the Comau code file.
 
 
-def cod_declarations(text: str) -> list:
+def extract_cod_declarations(text: str) -> list:
     declarations = []
     if "BEGIN" in text:
         for line in text.split("BEGIN")[0].split("\n"):
@@ -21,7 +20,7 @@ def cod_declarations(text: str) -> list:
     return declarations
 
 
-def cod_header(declarations: list) -> str:
+def extract_cod_header(declarations: list) -> str:
     if declarations:
         for line in declarations:
             if line.startswith("PROGRAM"):
@@ -29,20 +28,20 @@ def cod_header(declarations: list) -> str:
     return ""
 
 
-def get_name(header: str) -> str:
+def extract_name(header: str) -> str:
     # Returns the name of the program.
     if header:
         return header.split()[1]
     return ""
 
 
-def cod_body(text: str) -> str:
+def extract_cod_body(text: str) -> str:
     if "BEGIN" in text and "END" in text:
         return text.split("BEGIN")[1]
     return ""
 
 
-def constants(declarations: list) -> list:
+def extract_constants(declarations: list) -> list:
     if declarations:
         return [
             line
@@ -52,7 +51,7 @@ def constants(declarations: list) -> list:
     return []
 
 
-def routines(declarations: list, body: str) -> list:
+def extract_routines(declarations: list, body: str) -> list:
     routines = []
     for line in declarations:
         if line.startswith("ROUTINE"):
@@ -64,21 +63,21 @@ def routines(declarations: list, body: str) -> list:
     return routines
 
 
-def var_lines(declarations: list, body: str) -> list:
+def extract_var_declarations(declarations: list, body: str) -> list:
     variable_lines = []
     if declarations:
         for line in declarations:
             if ":" in line and not (
                 line.startswith("ROUTINE") or line.startswith("PROGRAM")
             ):
-                used_vars = extract_used_vars(line, body)
+                used_vars = _extract_used_vars(line, body)
                 variable_lines.append(
-                    create_var_line(used_vars, line.split(":")[1].strip())
+                    _compose_variable_declaration(used_vars, line.split(":")[1].strip())
                 )
     return variable_lines
 
 
-def extract_used_vars(variable_line: str, body: str) -> list:
+def _extract_used_vars(variable_line: str, body: str) -> list:
     used_variables = []
     for var in variable_line.split(":")[0].split(","):
         if var.strip() in body:
@@ -86,7 +85,7 @@ def extract_used_vars(variable_line: str, body: str) -> list:
     return used_variables
 
 
-def create_var_line(variables: list, variable_type: str) -> str:
+def _compose_variable_declaration(variables: list, variable_type: str) -> str:
     var_line = ", ".join(variables)
     return f"{var_line} : {variable_type}"
 
@@ -102,11 +101,11 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
         # find move line
         if _current_line.startswith(("MOVE", "MOVEFLY")):
             if _buffer_lines:
-                new_movement = comau_move(_buffer_lines)
+                new_movement = _comau_move(_buffer_lines)
                 movements.append(new_movement)
                 # check if circular in order to get the via point
                 if new_movement.move_type == Move_type.CIRCULAR:
-                    via_point = comau_move(_buffer_lines, True)
+                    via_point = _comau_move(_buffer_lines, True)
                     movements.append(via_point)
                 _buffer_lines = []
             # insert first line in move buffer
@@ -118,7 +117,7 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
     return movements
 
 
-def comau_move(buffer_lines: list, via_point: bool = False) -> ComauMove | WeldSpot:
+def _comau_move(buffer_lines: list, via_point: bool = False) -> ComauMove | WeldSpot:
     for line in buffer_lines:
         if line.strip().startswith("WITH CONDITION"):
             if "spot" in line or "weld" in line:
@@ -130,3 +129,11 @@ def comau_move(buffer_lines: list, via_point: bool = False) -> ComauMove | WeldS
     new_movement = ComauMove()
     new_movement.extract_cod(buffer_lines, via_point)
     return new_movement
+
+
+def get_weld_spots(movements: list) -> list:
+    if movements:
+        return [
+            move for move in movements if isinstance(move, WeldSpot)
+        ]  # Use the stored result
+    return []

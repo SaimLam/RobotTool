@@ -10,9 +10,8 @@ def main() -> None:
     print()
     print(program.header)
     print()
-    for spot in program.weld_spots():
-        print(spot)
-        print(spot.spot_index)
+    for routine in program.routines:
+        print(routine)
         print()
 
 
