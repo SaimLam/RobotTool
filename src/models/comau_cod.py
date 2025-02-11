@@ -1,4 +1,5 @@
 from typing import List
+
 from src.models.comau_move import ComauMove, Move_type, WeldSpot
 
 # This file contains the functions to parse a Comau code file. The code file is divided into a header, declarations, and body.
@@ -72,7 +73,7 @@ def extract_var_declarations(declarations: list, body: str) -> list:
             ):
                 used_vars = _extract_used_vars(line, body)
                 variable_lines.append(
-                    _compose_variable_declaration(used_vars, line.split(":")[1].strip())
+                    _compose_var_declaration(used_vars, line.split(":")[1].strip())
                 )
     return variable_lines
 
@@ -85,7 +86,7 @@ def _extract_used_vars(variable_line: str, body: str) -> list:
     return used_variables
 
 
-def _compose_variable_declaration(variables: list, variable_type: str) -> str:
+def _compose_var_declaration(variables: list, variable_type: str) -> str:
     var_line = ", ".join(variables)
     return f"{var_line} : {variable_type}"
 
@@ -94,40 +95,42 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
     # Returns a list of ComauMove objects parsed from the cod body.
     lines = cod_text.split("\n")
     movements = []
-    _buffer_lines = []
+    _move_lines_buffer = []
     # text iteration
     for _current_line in lines:
         _current_line = _current_line.strip()
         # find move line
         if _current_line.startswith(("MOVE", "MOVEFLY")):
-            if _buffer_lines:
-                new_movement = _comau_move(_buffer_lines)
+            if _move_lines_buffer:
+                new_movement = _parse_comau_move(_move_lines_buffer)
                 movements.append(new_movement)
                 # check if circular in order to get the via point
                 if new_movement.move_type == Move_type.CIRCULAR:
-                    via_point = _comau_move(_buffer_lines, True)
+                    via_point = _parse_comau_move(_move_lines_buffer, True)
                     movements.append(via_point)
-                _buffer_lines = []
+                _move_lines_buffer = []
             # insert first line in move buffer
-            _buffer_lines.append(_current_line)
+            _move_lines_buffer.append(_current_line)
         # fill the move buffer lines
         if _current_line.startswith(("WITH", "ENDMOVE")):
-            _buffer_lines.append(_current_line)
+            _move_lines_buffer.append(_current_line)
 
     return movements
 
 
-def _comau_move(buffer_lines: list, via_point: bool = False) -> ComauMove | WeldSpot:
-    for line in buffer_lines:
+def _parse_comau_move(
+    move_lines_buffer: list, via_point: bool = False
+) -> ComauMove | WeldSpot:
+    for line in move_lines_buffer:
         if line.strip().startswith("WITH CONDITION"):
             if "spot" in line or "weld" in line:
                 new_spot_move = WeldSpot()
-                new_spot_move.extract_cod(buffer_lines)
+                new_spot_move.extract_cod(move_lines_buffer)
                 new_spot_move.set_spot_index(line)
                 return new_spot_move
 
     new_movement = ComauMove()
-    new_movement.extract_cod(buffer_lines, via_point)
+    new_movement.extract_cod(move_lines_buffer, via_point)
     return new_movement
 
 
