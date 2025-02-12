@@ -1,4 +1,4 @@
-from src.models.comau_explore import ComauExplorer
+from src.comau_model.comau_explore import ComauExplorer
 
 
 def main() -> None:
@@ -10,9 +10,12 @@ def main() -> None:
     print()
     print(program.header)
     print()
-    for routine in program.routines:
-        print(routine)
-        print()
+    print(program.body)
+
+
+"""    for spot in program.weld_spots():
+        print(spot.condition)
+        print()"""
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from src.models.comau_move import ComauMove, WeldSpot
-from src.models.comau_cod import (
+from src.comau_model.comau_move import ComauMove, WeldSpot
+from src.comau_model.comau_cod_extract import (
     extract_cod_body,
     extract_cod_declarations,
     extract_cod_header,
@@ -12,7 +12,7 @@ from src.models.comau_cod import (
     extract_var_declarations,
     get_weld_spots,
 )
-from src.models.comau_var import extract_move_var_lines
+from comau_model.comau_var_extract import extract_move_var_lines
 
 
 @dataclass(slots=True)

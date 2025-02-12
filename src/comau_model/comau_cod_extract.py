@@ -1,6 +1,6 @@
 from typing import List
 
-from src.models.comau_move import ComauMove, Move_type, WeldSpot
+from src.comau_model.comau_move import ComauMove, Move_type, WeldSpot
 
 # This file contains the functions to parse a Comau code file. The code file is divided into a header, declarations, and body.
 # The header contains the program name, the declarations contain the constants, routines, and variables, and the body contains the code instructions.

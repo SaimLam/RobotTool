@@ -1,7 +1,7 @@
 import os
 import zipfile
 
-from src.models.comau_program import ComauProgram
+from src.comau_model.comau_program import ComauProgram
 
 
 class ComauExplorer:
