@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from models.comau_move import ComauMove, WeldSpot
+from src.models.comau_move import ComauMove, WeldSpot
 from src.models.comau_cod import (
     extract_cod_body,
     extract_cod_declarations,
