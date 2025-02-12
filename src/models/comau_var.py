@@ -1,8 +1,8 @@
 # This file contains the Comau var module which is used to extract and store information about a Comau variable.
 
 
-def extract_move_var_lines(name: str, text: str) -> list:
-    var_lines = []
+def extract_move_var_lines(name: str, text: str) -> list[str]:
+    var_lines: list[str] = []
     for line in text.split("\n"):
         if line.strip() and not line.startswith("--"):
             stripped_line = line.strip()

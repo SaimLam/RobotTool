@@ -22,7 +22,7 @@ class ComauMove:
     move_type: Move_type = Move_type.JOINT
     pos_type: Pos_type = Pos_type.pnt
     condition: list[str] = field(default_factory=list)
-    coordinates: dict = field(default_factory=dict)
+    coordinates: dict[str, float] = field(default_factory=dict)
     cnfg: str = ""
 
     # cod represantation
@@ -69,9 +69,9 @@ class ComauMove:
         else:
             self.name = unconventional
 
-    def extract_cod(self, cod_lines: list, via_point: bool = False) -> None:
+    def extract_cod(self, cod_lines: list[str], via_point: bool = False) -> None:
         if cod_lines:
-            first_cod_line = cod_lines[0].strip()
+            first_cod_line: str = cod_lines[0].strip()
             self._check_home(first_cod_line)
             self._check_movefly(first_cod_line)
             self._check_condition(cod_lines, first_cod_line)
@@ -87,7 +87,7 @@ class ComauMove:
         if first_cod_line.startswith("MOVEFLY"):
             self.fly = True
 
-    def _check_condition(self, cod_lines: list, first_cod_line: str) -> None:
+    def _check_condition(self, cod_lines: list[str], first_cod_line: str) -> None:
         if first_cod_line.endswith(",") and len(cod_lines) > 1:
             self.condition = []
             for condition_line in cod_lines:
@@ -106,7 +106,8 @@ class ComauMove:
                 return Move_type.LINEAR
             case "CIRCULAR":
                 return Move_type.CIRCULAR
-        return Move_type.JOINT  # Default return value
+            case _:
+                return Move_type.JOINT  # Default return value
 
     def _extract_position_type(self, position_type_string: str) -> Pos_type:
         match position_type_string:
@@ -114,9 +115,10 @@ class ComauMove:
                 return Pos_type.xtn
             case "JNTP":
                 return Pos_type.jnt
-        return Pos_type.pnt  # Default return value
+            case _:
+                return Pos_type.pnt  # Default return value
 
-    def extract_var(self, var_lines: list) -> None:
+    def extract_var(self, var_lines: list[str]) -> None:
         # Check if the var_lines list is not empty
         if len(var_lines) > 1:
             # extract move position type
@@ -127,12 +129,12 @@ class ComauMove:
             if len(var_lines) > 2:
                 self.cnfg = var_lines[2].strip()
 
-    def _extract_move_coordinates(self, position_var_line: str) -> dict:
+    def _extract_move_coordinates(self, position_var_line: str) -> dict[str, float]:
         # Split the position_var_line into a list
         position_vars = position_var_line.split()
         # Create a dictionary with the position variables
         return {
-            position_vars[i].strip(":"): position_vars[i + 1]
+            position_vars[i].strip(":"): float(position_vars[i + 1])
             for i in range(0, len(position_vars), 2)
         }
 

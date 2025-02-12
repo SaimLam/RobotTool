@@ -5,18 +5,18 @@ from src.models.comau_program import ComauProgram
 
 
 class ComauExplorer:
-    def __init__(self, path) -> None:
-        self.path = path
+    def __init__(self, path: str) -> None:
+        self.path: str = path
 
-    def file_search(self, filename) -> str:
+    def file_search(self, filename: str) -> str:
         # Search for a file in the directory
-        for root, dirs, files in os.walk(self.path):
+        for root, _, files in os.walk(self.path):
             if filename in files:
                 # Return the path of the file
                 return os.path.join(root, filename)
         return ""
 
-    def file_unzip(self, zip_path, extract_to) -> None:
+    def file_unzip(self, zip_path: str, extract_to: str) -> None:
         try:
             with zipfile.ZipFile(zip_path, "r") as zip_ref:
                 zip_ref.extractall(extract_to)
@@ -28,7 +28,7 @@ class ComauExplorer:
         except Exception as e:
             print(f"An error occurred while unzipping the file: {e}")
 
-    def file_read(self, file_path) -> str:
+    def file_read(self, file_path: str) -> str:
         # Read the file and return its contents
         try:
             with open(file_path, "r") as file:
@@ -38,7 +38,7 @@ class ComauExplorer:
         except Exception as e:
             return f"An error occurred: {e}"
 
-    def file_write(self, file_path, content) -> None:
+    def file_write(self, file_path: str, content: str) -> None:
         try:
             with open(file_path, "w") as file:
                 file.write(content)

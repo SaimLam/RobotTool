@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 
+from models.comau_move import ComauMove, WeldSpot
 from src.models.comau_cod import (
     extract_cod_body,
     extract_cod_declarations,
@@ -18,14 +19,14 @@ from src.models.comau_var import extract_move_var_lines
 class ComauProgram:
     cod: str
     var: str = ""
-    declarations: list = field(default_factory=list, init=False)
+    declarations: list[str] = field(default_factory=list, init=False)
     body: str = field(init=False)
     header: str = field(init=False)
     name: str = field(init=False)
-    constants: list = field(default_factory=list, init=False)
-    routines: list = field(default_factory=list, init=False)
-    var_declaration: list = field(default_factory=list, init=False)
-    move_list: list = field(default_factory=list, init=False)
+    constants: list[str] = field(default_factory=list, init=False)
+    routines: list[str] = field(default_factory=list, init=False)
+    var_declaration: list[str] = field(default_factory=list, init=False)
+    move_list: list[ComauMove] = field(default_factory=list, init=False)
 
     def __post_init__(self) -> None:
         self.declarations = extract_cod_declarations(self.cod)
@@ -35,11 +36,11 @@ class ComauProgram:
         self.constants = extract_constants(self.declarations)
         self.routines = extract_routines(self.declarations, self.body)
         self.var_declaration = extract_var_declarations(self.declarations, self.body)
-        self.move_list = (
+        self.move_list: list[ComauMove] = (
             self._extract_movements()
         )  # Call the movements method and store the result
 
-    def _extract_movements(self) -> list:
+    def _extract_movements(self) -> list[ComauMove]:
         movements = extract_moves_from_cod(self.body)
         if movements:  # Use the stored result
             for movement in movements:
@@ -48,5 +49,5 @@ class ComauProgram:
                     movement.extract_var(movement_var_lines)
         return movements
 
-    def weld_spots(self) -> list:
+    def weld_spots(self) -> list[WeldSpot]:
         return get_weld_spots(self.move_list)

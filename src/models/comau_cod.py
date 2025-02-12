@@ -7,8 +7,8 @@ from src.models.comau_move import ComauMove, Move_type, WeldSpot
 # The functions in this file extract the header, declarations, constants, routines, and variables from the Comau code file.
 
 
-def extract_cod_declarations(text: str) -> list:
-    declarations = []
+def extract_cod_declarations(text: str) -> list[str]:
+    declarations: list[str] = []
     if "BEGIN" in text:
         for line in text.split("BEGIN")[0].split("\n"):
             line = line.strip()
@@ -21,7 +21,7 @@ def extract_cod_declarations(text: str) -> list:
     return declarations
 
 
-def extract_cod_header(declarations: list) -> str:
+def extract_cod_header(declarations: list[str]) -> str:
     if declarations:
         for line in declarations:
             if line.startswith("PROGRAM"):
@@ -42,7 +42,7 @@ def extract_cod_body(text: str) -> str:
     return ""
 
 
-def extract_constants(declarations: list) -> list:
+def extract_constants(declarations: list[str]) -> list[str]:
     if declarations:
         return [
             line
@@ -52,20 +52,19 @@ def extract_constants(declarations: list) -> list:
     return []
 
 
-def extract_routines(declarations: list, body: str) -> list:
-    routines = []
+def extract_routines(declarations: list[str], body: str) -> List[str]:
+    routines: List[str] = []
     for line in declarations:
         if line.startswith("ROUTINE"):
             if "(" in line and line.split("ROUTINE ")[1].split("(")[0].strip() in body:
                 routines.append(line)
-
             elif line.split("ROUTINE ")[1].split("EXPORTED FROM")[0].strip() in body:
                 routines.append(line)
     return routines
 
 
-def extract_var_declarations(declarations: list, body: str) -> list:
-    variable_lines = []
+def extract_var_declarations(declarations: list[str], body: str) -> list[str]:
+    variable_lines: List[str] = []
     if declarations:
         for line in declarations:
             if ":" in line and not (
@@ -78,15 +77,15 @@ def extract_var_declarations(declarations: list, body: str) -> list:
     return variable_lines
 
 
-def _extract_used_vars(variable_line: str, body: str) -> list:
-    used_variables = []
+def _extract_used_vars(variable_line: str, body: str) -> list[str]:
+    used_variables: List[str] = []
     for var in variable_line.split(":")[0].split(","):
         if var.strip() in body:
             used_variables.append(var.strip())
     return used_variables
 
 
-def _compose_var_declaration(variables: list, variable_type: str) -> str:
+def _compose_var_declaration(variables: list[str], variable_type: str) -> str:
     var_line = ", ".join(variables)
     return f"{var_line} : {variable_type}"
 
@@ -94,8 +93,8 @@ def _compose_var_declaration(variables: list, variable_type: str) -> str:
 def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
     # Returns a list of ComauMove objects parsed from the cod body.
     lines = cod_text.split("\n")
-    movements = []
-    _move_lines_buffer = []
+    movements: List[ComauMove | WeldSpot] = []
+    _move_lines_buffer: List[str] = []
     # text iteration
     for _current_line in lines:
         _current_line = _current_line.strip()
@@ -119,7 +118,7 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
 
 
 def _parse_comau_move(
-    move_lines_buffer: list, via_point: bool = False
+    move_lines_buffer: list[str], via_point: bool = False
 ) -> ComauMove | WeldSpot:
     for line in move_lines_buffer:
         if line.strip().startswith("WITH CONDITION"):
@@ -134,9 +133,7 @@ def _parse_comau_move(
     return new_movement
 
 
-def get_weld_spots(movements: list) -> list:
+def get_weld_spots(movements: List[ComauMove]) -> List[WeldSpot]:
     if movements:
-        return [
-            move for move in movements if isinstance(move, WeldSpot)
-        ]  # Use the stored result
+        return [move for move in movements if isinstance(move, WeldSpot)]
     return []
