@@ -1,4 +1,4 @@
-from src.comau_model.comau_explore import ComauExplorer
+from comau_model.explore import ComauExplorer
 
 
 def main() -> None:
