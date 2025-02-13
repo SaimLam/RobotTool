@@ -1,6 +1,7 @@
 import os
 import zipfile
 
+from comau_model.extract_program import extract_program
 from comau_model.program import ComauProgram
 
 
@@ -53,9 +54,9 @@ class ComauExplorer:
         cod_string = self.file_read(cod_file_path)
         if var_file_path:
             var_string = self.file_read(var_file_path)
-            return ComauProgram(cod=cod_string, var=var_string)
+            return extract_program(cod=cod_string, var=var_string)
         else:
-            return ComauProgram(cod=cod_string)
+            return extract_program(cod=cod_string)
 
     """    def file_translate(self, file_path) -> None:
         translate = subprocess.run(["Pdl2.exe", file_path], shell=True, check=True)"""

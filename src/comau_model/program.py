@@ -12,4 +12,7 @@ class ComauProgram:
     routines: list[str] = field(default_factory=list, init=False)
     var_declaration: list[str] = field(default_factory=list, init=False)
     move_list: list[ComauMove] = field(default_factory=list, init=False)
-    weld_spots: list[WeldSpot] = field(default_factory=list, init=False)
+
+    @property
+    def weld_spots(self) -> list[WeldSpot]:
+        return [move for move in self.move_list if isinstance(move, WeldSpot)]
