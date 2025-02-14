@@ -1,8 +1,8 @@
 import os
 import zipfile
 
-from comau_model.extract_program import extract_program
-from comau_model.program import ComauProgram
+from src.comau_model.extract_program import extract_program
+from src.comau_model.program import ComauProgram
 
 
 class ComauExplorer:
@@ -10,12 +10,15 @@ class ComauExplorer:
         self.path: str = path
 
     def file_search(self, filename: str) -> str:
-        # Search for a file in the directory
-        for root, _, files in os.walk(self.path):
-            if filename in files:
-                # Return the path of the file
-                return os.path.join(root, filename)
-        return ""
+        file_path: str = next(
+            (
+                os.path.join(root, filename)
+                for root, _, files in os.walk(self.path)
+                if filename in files
+            ),
+            "",
+        )
+        return file_path
 
     def file_unzip(self, zip_path: str, extract_to: str) -> None:
         try:
@@ -48,12 +51,12 @@ class ComauExplorer:
 
     def get_program(self, program_name: str) -> ComauProgram:
         # Search for the program files
-        cod_file_path = self.file_search(f"{program_name}.pdl")
-        var_file_path = self.file_search(f"{program_name}.lsv")
+        cod_file_path: str = self.file_search(f"{program_name}.pdl")
+        var_file_path: str = self.file_search(f"{program_name}.lsv")
         # If the program files are found
-        cod_string = self.file_read(cod_file_path)
+        cod_string: str = self.file_read(cod_file_path)
         if var_file_path:
-            var_string = self.file_read(var_file_path)
+            var_string: str = self.file_read(var_file_path)
             return extract_program(cod=cod_string, var=var_string)
         else:
             return extract_program(cod=cod_string)

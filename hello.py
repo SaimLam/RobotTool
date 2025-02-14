@@ -1,21 +1,22 @@
-from comau_model.explore import ComauExplorer
+from src.comau_model.explore import ComauExplorer
+from src.comau_model.program import ComauProgram
 
 
 def main() -> None:
-    explorer = ComauExplorer(path="/home/sai/Documents/RoboTool/robotool")
-    program = explorer.get_program("PW_DX_J4UPPZ1030R01")
+    explorer = ComauExplorer(
+        path="/home/sai/Documents/Code_Projects/RobotTools/RobotTool"
+    )
+    program: ComauProgram = explorer.get_program("PW_DX_J4UPPZ1030R01")
 
     print()
     print(program.name)
     print()
-    print(program.header)
-    print()
-    print(program.body)
 
-
-"""    for spot in program.weld_spots():
+    for spot in program.weld_spots:
+        print(spot.name)
+        print()
         print(spot.condition)
-        print()"""
+        print()
 
 
 if __name__ == "__main__":

@@ -1,7 +1,6 @@
 # extracting the comau program functions
 from typing import List, Union
 
-from comau_model.extract_move import extract_move_variable
 from src.comau_model.extract_cod import (
     extract_cod_body,
     extract_cod_declarations,
@@ -13,8 +12,10 @@ from src.comau_model.extract_cod import (
     extract_routines,
     extract_var_declarations,
 )
-from src.comau_model.move import ComauMove, WeldSpot
+from src.comau_model.extract_move import extract_move_variable
+from src.comau_model.move import ComauMove
 from src.comau_model.program import ComauProgram
+from src.comau_model.weld_spot import WeldSpot
 
 
 def extract_program(cod: str, var: str = "") -> ComauProgram:

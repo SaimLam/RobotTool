@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
-from comau_model.move import ComauMove, WeldSpot
+from src.comau_model.move import ComauMove
+from src.comau_model.weld_spot import WeldSpot
 
 
 @dataclass(slots=True)

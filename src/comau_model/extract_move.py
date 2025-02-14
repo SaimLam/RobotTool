@@ -1,4 +1,5 @@
-from comau_model.move import ComauMove, Move_type, Pos_type, WeldSpot
+from comau_model.weld_spot import WeldSpot
+from src.comau_model.move import ComauMove, Move_type, Pos_type
 
 
 def extract_move(

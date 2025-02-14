@@ -1,7 +1,8 @@
 from typing import List
 
-from comau_model.extract_move import extract_move
-from comau_model.move import ComauMove, Move_type, WeldSpot
+from src.comau_model.extract_move import extract_move
+from src.comau_model.move import ComauMove, Move_type
+from src.comau_model.weld_spot import WeldSpot
 
 # This file contains the functions to parse a Comau code file. The code file is divided into a header, declarations, and body.
 # The header contains the program name, the declarations contain the constants, routines, and variables, and the body contains the code instructions.
@@ -12,7 +13,7 @@ def extract_cod_declarations(text: str) -> list[str]:
     declarations: list[str] = []
     if "BEGIN" in text:
         for line in text.split("BEGIN")[0].split("\n"):
-            line = line.strip()
+            line: str = line.strip()
             if line and not line.startswith("--"):
                 if "VAR" in line:
                     line = line.replace("VAR", "")
@@ -88,7 +89,7 @@ def _compose_var_declaration(variables: list[str], variable_type: str) -> str:
     return f"{var_line} : {variable_type}"
 
 
-def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
+def extract_moves_from_cod(cod_text: str) -> List[ComauMove]:
     lines: List[str] = cod_text.split("\n")
     movements: List[ComauMove | WeldSpot] = []
     _move_lines_buffer: List[str] = []
@@ -99,6 +100,9 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove | WeldSpot]:
         if _current_line.startswith(("MOVE", "MOVEFLY")):
             if _move_lines_buffer:
                 new_movement: ComauMove = extract_move(_move_lines_buffer)
+                assert isinstance(
+                    new_movement, ComauMove
+                ), "extract_move did not return a ComauMove object"
                 movements.append(new_movement)
                 # check if circular in order to get the via point
                 if new_movement.move_type == Move_type.CIRCULAR:
@@ -118,8 +122,8 @@ def extract_move_var_lines(name: str, text: str) -> list[str]:
     var_lines: list[str] = []
     for line in text.split("\n"):
         if line.strip() and not line.startswith("--"):
-            stripped_line = line.strip()
-            split_name = stripped_line.split()[0]
+            stripped_line: str = line.strip()
+            split_name: str = stripped_line.split()[0]
             if split_name == name and not var_lines:
                 var_lines.append(line)
             elif len(var_lines) == 1 and stripped_line.startswith("X"):

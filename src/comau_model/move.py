@@ -25,20 +25,23 @@ class ComauMove:
     coordinates: dict[str, float] = field(default_factory=dict)
     cnfg: str = ""
 
-    # cod represantation
+    # cod presentation
     def __repr__(self) -> str:
         if self.fly:
-            if self.condition:
-                return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
-            return f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE"
-        else:
-            if self.condition:
-                return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
-            return f"  MOVE {self.move_type.name} TO {self.name}"
+            return (
+                f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
+                if self.condition
+                else f"  MOVEFLY {self.move_type.name} TO {self.name} ADVANCE"
+            )
+        return (
+            f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
+            if self.condition
+            else f"  MOVE {self.move_type.name} TO {self.name}"
+        )
 
-    # var represantation
+    # var presentation
     def var_string(self) -> str:
-        coord_str = self.coordinates_string()
+        coord_str: str = self.coordinates_string()
 
         match self.pos_type:
             case Pos_type.jnt:
@@ -48,14 +51,11 @@ class ComauMove:
             case Pos_type.xtn:
                 return f"{self.name} XTND Arm: 1 Ax: {len(self.coordinates) - 6} Priv \n{coord_str}\n {self.cnfg}"
 
-    # coodinates represantation
+    # coordinates presentation
     def coordinates_string(self) -> str:
         if not self.coordinates:
             return f"{self.name} POS  has no coordinate data"
-        coord_str = ""
-        for key, var in self.coordinates.items():
-            coord_str += f" {key}: {var}"
-        return coord_str
+        return " ".join(f"{key}: {var}" for key, var in self.coordinates.items())
 
     def rename(self, name_index: int, unconventional: str = "") -> None:
         if not unconventional:
@@ -68,18 +68,3 @@ class ComauMove:
                     self.name = f"xtn{name_index}X"
         else:
             self.name = unconventional
-
-
-@dataclass(slots=True)
-class WeldSpot(ComauMove):
-    spot_index: int = 0
-
-    def __repr__(self) -> str:
-        return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
-
-    def extract_spot_index(self, weld_string: str) -> None:
-        index_str = weld_string.split("(")[1]
-        if "," in index_str:
-            self.spot_index = int(index_str.split(",")[0])
-        else:
-            self.spot_index = int(index_str.split(")")[0])
