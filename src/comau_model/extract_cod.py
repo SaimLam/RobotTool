@@ -100,9 +100,9 @@ def extract_moves_from_cod(cod_text: str) -> List[ComauMove]:
         if _current_line.startswith(("MOVE", "MOVEFLY")):
             if _move_lines_buffer:
                 new_movement: ComauMove = extract_move(_move_lines_buffer)
-                assert isinstance(
-                    new_movement, ComauMove
-                ), "extract_move did not return a ComauMove object"
+                assert isinstance(new_movement, ComauMove), (
+                    "extract_move did not return a ComauMove object"
+                )
                 movements.append(new_movement)
                 # check if circular in order to get the via point
                 if new_movement.move_type == Move_type.CIRCULAR:

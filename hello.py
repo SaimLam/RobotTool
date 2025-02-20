@@ -3,9 +3,7 @@ from src.comau_model.program import ComauProgram
 
 
 def main() -> None:
-    explorer = ComauExplorer(
-        path="/home/sai/Documents/Code_Projects/RobotTools/RobotTool"
-    )
+    explorer = ComauExplorer(path="/home/sai/Documents/RoboTool/robotool")
     program: ComauProgram = explorer.get_program("PW_DX_J4UPPZ1030R01")
 
     print()
@@ -14,8 +12,8 @@ def main() -> None:
 
     for spot in program.weld_spots:
         print(spot.name)
-        print()
-        print(spot.condition)
+        # print()
+        print(spot.is_name_conventional())
         print()
 
 
