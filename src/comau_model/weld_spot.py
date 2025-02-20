@@ -6,40 +6,37 @@ from src.comau_model.move import ComauMove
 
 @dataclass(slots=True)
 class WeldSpot(ComauMove):
-    spot_index: int = 0
+    @property
+    def spot_index(self) -> int:
+        if self.condition:
+            for condition in self.condition:
+                if "spot" in condition:
+                    condition_params: str = (
+                        condition.split("(")[1].split(")")[0].strip()
+                    )
 
-    def __post_init__(self) -> None:
-        weld_string: str = self._get_spot_condition()
-        self.spot_index = self._get_spot_index(weld_string)
+                    if condition_params.isnumeric():
+                        return int(condition_params.strip())
+
+                    return int(self._extract_index_from_params(condition_params))
+
+        return 0
 
     def __repr__(self) -> str:
         return f"  MOVE {self.move_type.name} TO {self.name}, \n    {'\n   '.join(self.condition)} \n  ENDMOVE"
 
     def is_name_conventional(self) -> bool:
-        # WP(_[A-Za-z]+)?_\d+
+        # weld spot name pattern: WP(_[A-Z 0-9]+)?_\d+
         pattern = r"^WP(_[A-Z0-9]+)?_\d+$"
         return bool(re.match(pattern, self.name.upper()))
 
     def set_conventional_name(self) -> str:
-        if not self.is_name_conventional():
-            return f"WP_{self.spot_index}"
-        return self.name
+        return self.name if self.is_name_conventional() else f"WP_{self.spot_index}"
 
-    def _get_spot_condition(self) -> str:
-        for condition in self.condition:
-            if "spot" or "weld" in condition:
-                return condition
-        return ""
-
-    def _get_spot_index(self, weld_string: str) -> int:
-        if "(" in weld_string:
-            index_str_buffer = weld_string.split("(")[1]
-            if "," in index_str_buffer:
-                index_str = index_str_buffer.split(",")[0]
-                if index_str.isnumeric():
-                    return int(index_str)
-            else:
-                index_str = index_str_buffer.split(")")[0]
-                if index_str.isnumeric():
-                    return int(index_str)
+    def _extract_index_from_params(self, params: str) -> int:
+        for param in params.split(","):
+            stripped_param: str = param.strip()
+            # Check if the param is a number and has more than 1 digit
+            if stripped_param.isnumeric() and len(stripped_param) > 1:
+                return int(stripped_param)
         return 0
