@@ -1,5 +1,5 @@
 # comau robot move class
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum, auto
 
 
@@ -17,13 +17,13 @@ class Pos_type(Enum):
 
 @dataclass(slots=True)
 class ComauMove:
-    name: str = ""
-    fly: bool = False
-    move_type: Move_type = Move_type.JOINT
-    pos_type: Pos_type = Pos_type.pnt
-    condition: list[str] = field(default_factory=list)
-    coordinates: dict[str, float] = field(default_factory=dict)
-    cnfg: str = ""
+    name: str
+    fly: bool
+    move_type: Move_type
+    pos_type: Pos_type
+    condition: list[str]
+    coordinates: dict[str, float]
+    cnfg: str
 
     # cod presentation
     def __repr__(self) -> str:
@@ -54,7 +54,7 @@ class ComauMove:
     # coordinates presentation
     def coordinates_string(self) -> str:
         if not self.coordinates:
-            return f"{self.name} POS  has no coordinate data"
+            return f"{self.name} has no position var data"
         return " ".join(f"{key}: {var}" for key, var in self.coordinates.items())
 
     def rename(self, name_index: int, unconventional: str = "") -> None:

@@ -1,7 +1,7 @@
-import os
 import zipfile
+from pathlib import Path
 
-from src.comau_model.extract_program import extract_program
+from src.comau_extract.extract_program import extract_program
 from src.comau_model.program import ComauProgram
 
 
@@ -10,15 +10,9 @@ class ComauExplorer:
         self.path: str = path
 
     def file_search(self, filename: str) -> str:
-        file_path: str = next(
-            (
-                os.path.join(root, filename)
-                for root, _, files in os.walk(self.path)
-                if filename in files
-            ),
-            "",
-        )
-        return file_path
+        for path in Path(self.path).rglob(filename):
+            return str(path)
+        return ""
 
     def file_unzip(self, zip_path: str, extract_to: str) -> None:
         try:

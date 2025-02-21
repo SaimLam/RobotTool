@@ -30,6 +30,11 @@ class WeldSpot(ComauMove):
         pattern = r"^WP(_[A-Z0-9]+)?_\d+$"
         return bool(re.match(pattern, self.name.upper()))
 
+    def is_index_conventional(self) -> bool:
+        if self.is_name_conventional():
+            return str(self.spot_index) in self.name
+        return self.spot_index > 1
+
     def set_conventional_name(self) -> str:
         return self.name if self.is_name_conventional() else f"WP_{self.spot_index}"
 

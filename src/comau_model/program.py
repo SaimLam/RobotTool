@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from src.comau_model.move import ComauMove
 from src.comau_model.weld_spot import WeldSpot
@@ -6,13 +6,13 @@ from src.comau_model.weld_spot import WeldSpot
 
 @dataclass(slots=True)
 class ComauProgram:
-    name: str = field(init=False)
-    header: str = field(init=False)
-    body: str = field(init=False)
-    constants: list[str] = field(default_factory=list, init=False)
-    routines: list[str] = field(default_factory=list, init=False)
-    var_declaration: list[str] = field(default_factory=list, init=False)
-    move_list: list[ComauMove] = field(default_factory=list, init=False)
+    name: str
+    header: str
+    body: str
+    constants: list[str]
+    routines: list[str]
+    var_declaration: list[str]
+    move_list: list[ComauMove]
 
     @property
     def weld_spots(self) -> list[WeldSpot]:

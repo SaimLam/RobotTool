@@ -7,7 +7,7 @@ class ActionType(Enum):
     RELEASE = "release_zone"
 
 
-@dataclass
+@dataclass(slots=True)
 class CollisionZone:
     nr: int
     robot_name: str
