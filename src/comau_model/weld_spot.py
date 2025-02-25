@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from src.comau_model.move import ComauMove
+from comau_model.move import ComauMove
 
 
 @dataclass(slots=True)

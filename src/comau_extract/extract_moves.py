@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from src.comau_model.move import ComauMove, Move_type, Pos_type
-from src.comau_model.weld_spot import WeldSpot
+from comau_model.move import ComauMove, Move_type, Pos_type
+from comau_model.weld_spot import WeldSpot
 
 
 def extract_movements(cod_body: str, var_file: str = "") -> List[ComauMove]:
@@ -68,14 +68,17 @@ def get_move(
     name: str, code_lines: List[str], var_lines: List[str]
 ) -> Union[ComauMove, WeldSpot]:
     """Parses code lines and variable lines to create a ComauMove or WeldSpot object."""
-
     first_cod_line: str = code_lines[0].strip()
     fly: bool = first_cod_line.startswith("MOVEFLY")
     move_type: Move_type = _extract_move_type(first_cod_line)
     condition: List[str] = _extract_condition(code_lines)
     position_type: Pos_type = _extract_position_type(first_cod_line.split()[1])
-    coordinates: dict[str, float] = _extract_coordinates(var_lines[1])
-    cnfg: str = _extract_cnfg(var_lines)
+
+    coordinates: dict[str, float] = {}
+    cnfg: str = ""
+    if var_lines:
+        coordinates = _extract_coordinates(var_lines[1])
+        cnfg = _extract_cnfg(var_lines)
 
     if _is_weld_spot(condition):
         return WeldSpot(
