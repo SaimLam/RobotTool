@@ -27,7 +27,7 @@ class CodConstant:
         """
         Return a string representation of the Constant instance.
         """
-        return f"CONST {self.name} = {self.value}"
+        return f"{self.name} = {self.value}"
 
 
 @dataclass
