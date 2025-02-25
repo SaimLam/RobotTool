@@ -63,7 +63,7 @@ class ComauMove:
 
     # var presentation
     def var_string(self) -> str:
-        coord_str: str = self.coordinates_string()
+        coord_str: str = self._coordinates_string()
 
         match self.pos_type:
             case Pos_type.jnt:
@@ -74,7 +74,7 @@ class ComauMove:
                 return f"{self.name} XTND Arm: 1 Ax: {len(self.coordinates) - 6} Priv \n{coord_str}\n {self.cnfg}"
 
     # coordinates presentation
-    def coordinates_string(self) -> str:
+    def _coordinates_string(self) -> str:
         if not self.coordinates:
             return f"{self.name} has no position var data"
         return " ".join(f"{key}: {var}" for key, var in self.coordinates.items())

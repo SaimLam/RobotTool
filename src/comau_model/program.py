@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
 from src.comau_model.move import ComauMove
 from src.comau_model.weld_spot import WeldSpot
 
@@ -9,9 +10,9 @@ class ComauProgram:
     name: str
     header: str
     body: str
-    constants: list[str]
-    routines: list[str]
-    var_declaration: list[str]
+    cod_constants: list[CodConstant]
+    cod_routines: list[CodRoutine]
+    cod_variables: list[CodVariable]
     move_list: list[ComauMove]
 
     @property

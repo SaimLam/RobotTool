@@ -23,13 +23,12 @@ def extract_movements(cod_body: str, var_file: str = "") -> List[ComauMove]:
                 if new_move.move_type == Move_type.CIRCULAR:
                     via_point_name: str = _extract_name(move_lines[1], True)
                     new_move.via_point = via_point_name
-                    movements.append(new_move)
 
                     via_point_var_lines: List[str] = _extract_var_lines(
                         via_point_name, var_file
                     )
                     via_point: ComauMove = get_move(
-                        via_point_name, move_lines, via_point_var_lines, True
+                        via_point_name, move_lines, via_point_var_lines
                     )
                     movements.append(via_point)
 
@@ -66,7 +65,7 @@ def _extract_var_lines(move_name: str, var_file: str) -> list[str]:
 
 
 def get_move(
-    name: str, code_lines: List[str], var_lines: List[str], is_via_point: bool = False
+    name: str, code_lines: List[str], var_lines: List[str]
 ) -> Union[ComauMove, WeldSpot]:
     """Parses code lines and variable lines to create a ComauMove or WeldSpot object."""
 

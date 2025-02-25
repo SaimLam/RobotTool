@@ -4,6 +4,7 @@
 from typing import List
 
 from comau_model.move import ComauMove
+from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
 from src.comau_extract.extract_move import extract_movements
 from src.comau_model.program import ComauProgram
 
@@ -13,13 +14,19 @@ def extract_program(cod: str, var: str = "") -> ComauProgram:
     body: str = _extract_cod_body(cod)
     header: str = _extract_cod_header(declarations)
     name: str = _extract_name(header)
-    constants: List[str] = _extract_constants(declarations)
-    routines: List[str] = _extract_routines(declarations, body)
-    var_declaration: List[str] = _extract_var_declarations(declarations, body)
+
+    constant_lines: List[str] = _extract_constants_lines(declarations)
+    costants: List[CodConstant] = _extract_constants(constant_lines)
+
+    routine_lines: List[str] = _extract_routine_lines(declarations, body)
+    routines: List[CodRoutine] = _extract_routines(routine_lines)
+
+    cod_variables: List[CodVariable] = _extract_cod_variables(declarations, body)
+
     move_list: List[ComauMove] = extract_movements(body, var)
 
     return ComauProgram(
-        name, header, body, constants, routines, var_declaration, move_list
+        name, header, body, costants, routines, cod_variables, move_list
     )
 
 
@@ -54,7 +61,17 @@ def _extract_cod_body(text: str) -> str:
     return text.split("BEGIN")[1] if "BEGIN" in text and "END" in text else ""
 
 
-def _extract_constants(declarations: List[str]) -> List[str]:
+def _extract_constants(constants_lines: List[str]) -> List[CodConstant]:
+    constants: List[CodConstant] = []
+    for line in constants_lines:
+        if "CONST" in line:
+            name: str = line.split("=")[0].strip()
+            value: int = int(line.split("=")[1].strip())
+            constants.append(CodConstant(name, value))
+    return constants
+
+
+def _extract_constants_lines(declarations: List[str]) -> List[str]:
     if declarations:
         return [
             line
@@ -64,29 +81,45 @@ def _extract_constants(declarations: List[str]) -> List[str]:
     return []
 
 
-def _extract_routines(declarations: List[str], body: str) -> List[str]:
-    routines: List[str] = []
-    for line in declarations:
-        if line.startswith("ROUTINE"):
-            if "(" in line and line.split("ROUTINE ")[1].split("(")[0].strip() in body:
-                routines.append(line)
-            elif line.split("ROUTINE ")[1].split("EXPORTED FROM")[0].strip() in body:
-                routines.append(line)
+def _extract_routines(routine_lines: list[str]) -> List[CodRoutine]:
+    routines: List[CodRoutine] = []  # type: ignore
+    for line in routine_lines:
+        routine_name: str = line.split("ROUTINE ")[1].split("(")[0].strip()
+        parent_module: str = line.split("EXPORTED FROM ")[1].strip()
+        if "(" in line:
+            routine_body: str = line.split("(")[1].split(")")[0]
+            params: List[str] = [param.strip() for param in routine_body.split(";")]
+        else:
+            params: List[str] = []
+        routines.append(CodRoutine(routine_name, parent_module, params))
     return routines
 
 
-def _extract_var_declarations(declarations: List[str], body: str) -> List[str]:
-    variable_lines: List[str] = []
+def _extract_routine_lines(declarations: List[str], body: str) -> List[str]:
+    routines_lines: List[str] = []
+    for line in declarations:
+        if line.startswith("ROUTINE"):
+            if "(" in line and line.split("ROUTINE ")[1].split("(")[0].strip() in body:
+                routines_lines.append(line)
+            elif line.split("ROUTINE ")[1].split("EXPORTED FROM")[0].strip() in body:
+                routines_lines.append(line)
+    return routines_lines
+
+
+def _extract_cod_variables(declarations: List[str], body: str) -> List[CodVariable]:
+    cod_variables: List[CodVariable] = []
     if declarations:
         for line in declarations:
             if ":" in line and not (
                 line.startswith("ROUTINE") or line.startswith("PROGRAM")
             ):
                 used_vars: List[str] = _extract_used_vars(line, body)
-                variable_lines.append(
-                    _compose_var_declaration(used_vars, line.split(":")[1].strip())
-                )
-    return variable_lines
+                for used_var in used_vars:
+                    cod_var: CodVariable = CodVariable(
+                        used_var, line.split(":")[1].strip()
+                    )
+                    cod_variables.append(cod_var)
+    return cod_variables
 
 
 def _extract_used_vars(variable_line: str, body: str) -> List[str]:
@@ -96,8 +129,3 @@ def _extract_used_vars(variable_line: str, body: str) -> List[str]:
         if var.strip() in body
     ]
     return used_variables
-
-
-def _compose_var_declaration(variables: List[str], variable_type: str) -> str:
-    var_line: str = ", ".join(variables)
-    return f"{var_line} : {variable_type}"
