@@ -10,11 +10,30 @@ def extract_movements(cod_body: str, var_file: str = "") -> List[ComauMove]:
         for move_lines in _extract_cod_lines(cod_body):
             move_name: str = _extract_name(move_lines[0], False)
             if move_name == "$HOME":
-                movements.append(
-                    ComauMove("$HOME", False, Move_type.JOINT, Pos_type.jnt, [], {}, "")
+                new_move = ComauMove(
+                    "$HOME", False, Move_type.JOINT, Pos_type.jnt, [], {}, ""
                 )
-            movement_var_lines: List[str] = _extract_var_lines(move_name, var_file)
-            movements.append(get_move(move_lines, movement_var_lines))
+
+            else:
+                movement_var_lines: List[str] = _extract_var_lines(move_name, var_file)
+                new_move: Union[ComauMove, WeldSpot] = get_move(
+                    move_name, move_lines, movement_var_lines
+                )
+
+                if new_move.move_type == Move_type.CIRCULAR:
+                    via_point_name: str = _extract_name(move_lines[1], True)
+                    new_move.via_point = via_point_name
+                    movements.append(new_move)
+
+                    via_point_var_lines: List[str] = _extract_var_lines(
+                        via_point_name, var_file
+                    )
+                    via_point: ComauMove = get_move(
+                        via_point_name, move_lines, via_point_var_lines, True
+                    )
+                    movements.append(via_point)
+
+            movements.append(new_move)
     return movements
 
 
@@ -47,15 +66,11 @@ def _extract_var_lines(move_name: str, var_file: str) -> list[str]:
 
 
 def get_move(
-    code_lines: List[str], var_lines: List[str], is_via_point: bool = False
+    name: str, code_lines: List[str], var_lines: List[str], is_via_point: bool = False
 ) -> Union[ComauMove, WeldSpot]:
     """Parses code lines and variable lines to create a ComauMove or WeldSpot object."""
 
-    if not code_lines:
-        raise ValueError("code_lines cannot be empty")
-
     first_cod_line: str = code_lines[0].strip()
-    move_name: str = _extract_name(first_cod_line, is_via_point)
     fly: bool = first_cod_line.startswith("MOVEFLY")
     move_type: Move_type = _extract_move_type(first_cod_line)
     condition: List[str] = _extract_condition(code_lines)
@@ -65,11 +80,11 @@ def get_move(
 
     if _is_weld_spot(condition):
         return WeldSpot(
-            move_name, fly, move_type, position_type, condition, coordinates, cnfg
+            name, fly, move_type, position_type, condition, coordinates, cnfg
         )
     else:
         return ComauMove(
-            move_name, fly, move_type, position_type, condition, coordinates, cnfg
+            name, fly, move_type, position_type, condition, coordinates, cnfg
         )
 
 
