@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from comau_handle.handle_var_str import get_variables_string
 from comau_model.move import ComauMove
 from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
 from comau_model.weld_spot import WeldSpot
@@ -28,6 +29,4 @@ class ComauProgram:
         return "\n".join([str(routine) for routine in self.cod_routines])
 
     def variables_string(self) -> str:
-        return "VAR \n " + "\n ".join(
-            [str(variable) for variable in self.cod_variables]
-        )
+        return get_variables_string(self.cod_variables)
