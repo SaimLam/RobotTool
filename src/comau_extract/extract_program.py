@@ -5,6 +5,7 @@ from typing import List
 
 from comau_extract.extract_moves import extract_movements
 from comau_extract.extract_routines import get_cod_routines
+from comau_model.cod_body import CodBody
 from comau_model.move import ComauMove
 from comau_model.program import ComauProgram
 from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
@@ -27,18 +28,20 @@ def extract_program(cod_text: str, var_text: str = "") -> ComauProgram:
     """
 
     cod_declarations: List[str] = _extract_cod_declarations(cod_text)
-    body: str = _extract_cod_body(cod_text)
+    body: CodBody = _extract_cod_body(cod_text)
     header: str = _extract_cod_header(cod_declarations)
     name: str = _extract_name(header)
 
     constant_lines: List[str] = _extract_constants_lines(cod_declarations)
     cod_constants: List[CodConstant] = _extract_constants(constant_lines)
 
-    routines: List[CodRoutine] = get_cod_routines(cod_declarations, body)
+    routines: List[CodRoutine] = get_cod_routines(cod_declarations, body.text)
 
-    cod_variables: List[CodVariable] = _extract_cod_variables(cod_declarations, body)
+    cod_variables: List[CodVariable] = _extract_cod_variables(
+        cod_declarations, body.text
+    )
 
-    move_list: List[ComauMove] = extract_movements(body, var_text)
+    move_list: List[ComauMove] = extract_movements(body.movement_lines, var_text)
 
     return ComauProgram(
         name, header, body, cod_constants, routines, cod_variables, move_list
@@ -72,8 +75,10 @@ def _extract_name(header: str) -> str:
     return header.split()[1] if header else ""
 
 
-def _extract_cod_body(text: str) -> str:
-    return text.split("BEGIN")[1] if "BEGIN" in text and "END" in text else ""
+def _extract_cod_body(text: str) -> CodBody:
+    if "BEGIN" in text and "END" in text:
+        return CodBody(text.split("BEGIN")[1])
+    return CodBody("")
 
 
 def _extract_constants(constants_lines: List[str]) -> List[CodConstant]:

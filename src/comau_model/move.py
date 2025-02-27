@@ -17,6 +17,7 @@ class Pos_type(Enum):
 
 @dataclass(slots=True)
 class ComauMove:
+    line_index: int
     name: str
     fly: bool
     move_type: Move_type

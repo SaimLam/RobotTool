@@ -4,52 +4,45 @@ from comau_model.move import ComauMove, Move_type, Pos_type
 from comau_model.weld_spot import WeldSpot
 
 
-def extract_movements(cod_body: str, var_file: str = "") -> List[ComauMove]:
+def extract_movements(
+    movement_lines: dict[int, list[str]], var_file: str = ""
+) -> List[ComauMove]:
     movements: List[Union[ComauMove, WeldSpot]] = []
-    if _extract_cod_lines(cod_body):
-        for move_lines in _extract_cod_lines(cod_body):
+    if movement_lines:
+        for index, move_lines in movement_lines.items():
             move_name: str = _extract_name(move_lines[0], False)
             if move_name == "$HOME":
                 new_move = ComauMove(
-                    "$HOME", False, Move_type.JOINT, Pos_type.jnt, [], {}, ""
+                    index,
+                    "$HOME",
+                    False,
+                    Move_type.JOINT,
+                    Pos_type.jnt,
+                    [],
+                    {},
+                    "",
                 )
 
             else:
                 movement_var_lines: List[str] = _extract_var_lines(move_name, var_file)
                 new_move: Union[ComauMove, WeldSpot] = get_move(
-                    move_name, move_lines, movement_var_lines
+                    index, move_name, move_lines, movement_var_lines
                 )
 
                 if new_move.move_type == Move_type.CIRCULAR:
-                    via_point_name: str = _extract_name(move_lines[1], True)
+                    via_point_name: str = _extract_name(move_lines[0], True)
                     new_move.via_point = via_point_name
 
                     via_point_var_lines: List[str] = _extract_var_lines(
                         via_point_name, var_file
                     )
                     via_point: ComauMove = get_move(
-                        via_point_name, move_lines, via_point_var_lines
+                        index, via_point_name, move_lines, via_point_var_lines
                     )
                     movements.append(via_point)
 
             movements.append(new_move)
     return movements
-
-
-def _extract_cod_lines(cod_text: str) -> List[list[str]]:
-    lines: List[str] = cod_text.split("\n")
-    move_list: List[list[str]] = []
-    move_lines: List[str] = []
-    for line in lines:
-        line: str = line.strip()
-        if line.startswith(("MOVE", "MOVEFLY")):
-            if move_lines:
-                move_list.append(move_lines)
-                move_lines = []
-            move_lines.append(line)
-        elif line.startswith(("WITH", "ENDMOVE")):
-            move_lines.append(line)
-    return move_list
 
 
 def _extract_var_lines(move_name: str, var_file: str) -> list[str]:
@@ -65,7 +58,7 @@ def _extract_var_lines(move_name: str, var_file: str) -> list[str]:
 
 
 def get_move(
-    name: str, code_lines: List[str], var_lines: List[str]
+    index: int, name: str, code_lines: List[str], var_lines: List[str]
 ) -> Union[ComauMove, WeldSpot]:
     """Parses code lines and variable lines to create a ComauMove or WeldSpot object."""
     first_cod_line: str = code_lines[0].strip()
@@ -82,12 +75,11 @@ def get_move(
 
     if _is_weld_spot(condition):
         return WeldSpot(
-            name, fly, move_type, position_type, condition, coordinates, cnfg
+            index, name, False, move_type, position_type, condition, coordinates, cnfg
         )
-    else:
-        return ComauMove(
-            name, fly, move_type, position_type, condition, coordinates, cnfg
-        )
+    return ComauMove(
+        index, name, fly, move_type, position_type, condition, coordinates, cnfg
+    )
 
 
 def _extract_cnfg(var_lines: List[str]) -> str:

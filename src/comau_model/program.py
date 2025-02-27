@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from comau_handle.handle_var_str import get_variables_string
+from comau_model.cod_body import CodBody
 from comau_model.move import ComauMove
 from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
 from comau_model.weld_spot import WeldSpot
@@ -10,7 +11,7 @@ from comau_model.weld_spot import WeldSpot
 class ComauProgram:
     name: str
     header: str
-    body: str
+    body: CodBody
     cod_constants: list[CodConstant]
     cod_routines: list[CodRoutine]
     cod_variables: list[CodVariable]

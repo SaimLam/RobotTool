@@ -8,12 +8,12 @@ def main() -> None:
 
     print(prog.name)
     print("")
+    print(prog.body.collision_zone_lines)
+    print("")
+
     for move in prog.move_list:
+        print(move.line_index)
         print(move)
-    print("")
-    for weld_spot in prog.weld_spots:
-        print(weld_spot)
-    print("")
 
 
 if __name__ == "__main__":
