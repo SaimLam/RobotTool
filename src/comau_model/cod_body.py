@@ -39,10 +39,21 @@ class CodBody:
 
     @property
     def comment_lines(self) -> list[tuple[int, str]]:
-        return [line for line in self.lines if line[1].startswith("--")]
+        return [
+            line
+            for line in self.lines
+            if line[1].startswith("--") and self._alphanumeric(line[1])
+        ]
 
     @property
     def gripper_lines(self) -> list[tuple[int, str]]:
         return [
             line for line in self.lines if line[1].startswith(("gripper_", "grip_"))
         ]
+
+    @property
+    def init_lines(self) -> list[tuple[int, str]]:
+        return [line for line in self.lines if "init" in line[1]]
+
+    def _alphanumeric(self, line: str) -> bool:
+        return any(char.isalnum() for char in line)

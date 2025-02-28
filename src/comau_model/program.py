@@ -1,7 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from comau_handle.handle_var_str import get_variables_string
 from comau_model.cod_body import CodBody
+from comau_model.io_com import Input, Output
 from comau_model.move import ComauMove
 from comau_model.var_const_rout import CodConstant, CodRoutine, CodVariable
 from comau_model.weld_spot import WeldSpot
@@ -16,6 +17,8 @@ class ComauProgram:
     cod_routines: list[CodRoutine]
     cod_variables: list[CodVariable]
     move_list: list[ComauMove]
+    com_input: list[Input] = field(default_factory=list)
+    com_output: list[Output] = field(default_factory=list)
 
     @property
     def weld_spots(self) -> list[WeldSpot]:
