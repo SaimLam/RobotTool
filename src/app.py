@@ -8,12 +8,8 @@ def main() -> None:
 
     print(prog.name)
     print("")
-    print(prog.body.collision_zone_lines)
+    print(prog.body.text)
     print("")
-
-    for move in prog.move_list:
-        print(move.line_index)
-        print(move)
 
 
 if __name__ == "__main__":
