@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from comau_handle.handle_var_str import get_variables_string
+from comau_handle.handle_var_str import generate_variables_string
 from comau_model.cod_body import CodBody
 from comau_model.io_com import Input, Output
 from comau_model.move import ComauMove
@@ -33,4 +33,4 @@ class ComauProgram:
         return "\n".join([str(routine) for routine in self.cod_routines])
 
     def variables_string(self) -> str:
-        return get_variables_string(self.cod_variables)
+        return generate_variables_string(self.cod_variables)

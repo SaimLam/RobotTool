@@ -1,0 +1,24 @@
+from comau_model.collision_zone import ActionType, CollisionZone
+
+
+def extract_collision_zones(
+    collision_zone_lines: list[tuple[int, str]],
+) -> list[CollisionZone]:
+    collision_zones: list[CollisionZone] = []
+    action: ActionType
+    for line_index, line_str in collision_zone_lines:
+        action = ActionType.RELEASE
+        if line_str.startswith("engage_zone"):
+            action = ActionType.ENGAGE
+
+        collision_zones.append(_get_collision_zone(line_str, action, line_index))
+    return collision_zones
+
+
+def _get_collision_zone(
+    collision_line: str, action: ActionType, line_index: int
+) -> CollisionZone:
+    collision_para = collision_line.split("(")[1].split(")")[0]
+    collision_nr: int = int(collision_para.split(",")[0].strip())
+    robot_name: str = collision_para.split(",")[1].strip()
+    return CollisionZone(collision_nr, robot_name, ActionType.ENGAGE, line_index)

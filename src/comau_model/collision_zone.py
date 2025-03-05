@@ -12,6 +12,7 @@ class CollisionZone:
     nr: int
     robot_name: str
     action: ActionType
+    line_ind: int
 
     def __repr__(self) -> str:
         return f"{self.action.value}({self.nr}, '{self.robot_name}')"

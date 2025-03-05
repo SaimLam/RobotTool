@@ -65,13 +65,16 @@ def get_move(
     fly: bool = first_cod_line.startswith("MOVEFLY")
     move_type: Move_type = _extract_move_type(first_cod_line)
     condition: List[str] = _extract_condition(code_lines)
-    position_type: Pos_type = _extract_position_type(first_cod_line.split()[1])
+    position_type: Pos_type = Pos_type.jnt
 
     coordinates: dict[str, float] = {}
     cnfg: str = ""
     if var_lines:
         coordinates = _extract_coordinates(var_lines[1])
         cnfg = _extract_cnfg(var_lines)
+        position_type: Pos_type = _extract_position_type(
+            var_lines[0].split()[1].strip()
+        )
 
     if _is_weld_spot(condition):
         return WeldSpot(
@@ -86,7 +89,7 @@ def _extract_cnfg(var_lines: List[str]) -> str:
     """Extracts CNFG value from variable lines."""
     return (
         var_lines[2].strip()
-        if len(var_lines) > 2 and var_lines[2].startswith("CNFG")
+        if len(var_lines) > 2 and var_lines[2].strip().startswith("CNFG")
         else ""
     )
 

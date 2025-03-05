@@ -35,6 +35,7 @@ class CodBody:
             line
             for line in self.lines
             if line[1].startswith(("engage_zone", "release_zone"))
+            or "rel_zone_fly" in line[1]
         ]
 
     @property

@@ -8,8 +8,10 @@ def main() -> None:
 
     print(prog.name)
     print("")
-    print(prog.body.text)
-    print("")
+    for move in prog.move_list:
+        print("")
+        print(move)
+        print(move.var_string)
 
 
 if __name__ == "__main__":
